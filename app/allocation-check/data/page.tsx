@@ -50,6 +50,12 @@ interface RightData {
   };
 }
 
+interface CapturedPhoto {
+  id: string;
+  file: File;
+  previewUrl: string;
+}
+
 export default function AllocationDataPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -66,7 +72,8 @@ export default function AllocationDataPage() {
   const [saveAuthType, setSaveAuthType] = useState<'Auth_card' | 'Auth_manual'>('Auth_card'); // บอกว่าบันทึกมาจาก flow ไหน
   const [verifiedOfficerCitizenId, setVerifiedOfficerCitizenId] = useState<string | null>(null); // เลขบัตรประชาชนเจ้าหน้าที่ที่ยืนยันตัวตนแล้ว
   const [proofImagePath, setProofImagePath] = useState<string | null>(null); // Path ของรูปหลักฐาน
-  const [proofImagePreview, setProofImagePreview] = useState<string | null>(null); // Preview URL ของรูปหลักฐาน
+  const [capturedPhotos, setCapturedPhotos] = useState<CapturedPhoto[]>([]);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
   const [uploadingProof, setUploadingProof] = useState(false); // สถานะการอัพโหลดรูปหลักฐาน
   const [cameraActive, setCameraActive] = useState(false); // สถานะการเปิดกล้อง
   const [isVerifyingCard, setIsVerifyingCard] = useState(false); // สถานะการยืนยันตัวตนด้วยบัตร
@@ -80,6 +87,7 @@ export default function AllocationDataPage() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
+  const capturedPhotosRef = useRef<CapturedPhoto[]>([]);
 
   useEffect(() => {
     // ตรวจสอบ authentication
@@ -112,8 +120,14 @@ export default function AllocationDataPage() {
         mediaStreamRef.current.getTracks().forEach((track) => track.stop());
         mediaStreamRef.current = null;
       }
+      capturedPhotosRef.current.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+      capturedPhotosRef.current = [];
     };
   }, []);
+
+  useEffect(() => {
+    capturedPhotosRef.current = capturedPhotos;
+  }, [capturedPhotos]);
 
   const checkCardReaderStatus = async () => {
     try {
@@ -448,8 +462,17 @@ export default function AllocationDataPage() {
     router.push('/allocation-check');
   };
 
+  const clearCapturedPhotos = () => {
+    capturedPhotosRef.current.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+    capturedPhotosRef.current = [];
+    setCapturedPhotos([]);
+    setSelectedPhotoId(null);
+    setProofImagePath(null);
+  };
+
   const handleReset = () => {
     stopCamera();
+    clearCapturedPhotos();
     setCardData(null);
     setRightData(null);
     setErrorMessage('');
@@ -458,8 +481,6 @@ export default function AllocationDataPage() {
     setShowManualInput(false);
     setVerifiedOfficerCitizenId(null); // รีเซ็ตข้อมูลบัตรที่ยืนยันตัวตน
     setSaveAuthType('Auth_card');
-    setProofImagePath(null);
-    setProofImagePreview(null);
   };
 
   // ฟังก์ชันอ่านบัตรเพื่อยืนยันตัวตน (สำหรับกรอกเลขบัตรด้วยตนเอง)
@@ -573,7 +594,7 @@ export default function AllocationDataPage() {
     }
   };
 
-  const uploadProofFile = async (file: File) => {
+  const uploadProofFile = async (file: File): Promise<string> => {
     setUploadingProof(true);
     setErrorMessage('');
 
@@ -604,17 +625,13 @@ export default function AllocationDataPage() {
         throw new Error(result.error || 'ไม่สามารถอัพโหลดรูปได้');
       }
 
-      // เก็บ path และสร้าง preview URL
-      setProofImagePath(result.data.path);
-      const previewUrl = URL.createObjectURL(file);
-      setProofImagePreview(previewUrl);
-
       console.log('✅ อัพโหลดรูปหลักฐานสำเร็จ:', result.data.path);
+      return result.data.path;
     } catch (error) {
       console.error('❌ Error uploading proof image:', error);
       setErrorMessage(error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการอัพโหลดรูปหลักฐาน');
       setProofImagePath(null);
-      setProofImagePreview(null);
+      throw error;
     } finally {
       setUploadingProof(false);
     }
@@ -663,6 +680,10 @@ export default function AllocationDataPage() {
       setErrorMessage('ไม่พบอุปกรณ์กล้อง');
       return;
     }
+    if (capturedPhotos.length >= 3) {
+      setErrorMessage('ถ่ายได้สูงสุด 3 รูป กรุณาเลือกรูปที่ดีที่สุดแล้วบันทึก');
+      return;
+    }
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const width = video.videoWidth || 1280;
@@ -683,17 +704,33 @@ export default function AllocationDataPage() {
       return;
     }
     const captureFile = new File([blob], `proof_${Date.now()}.jpg`, { type: 'image/jpeg' });
-    await uploadProofFile(captureFile);
-    stopCamera();
+    const previewUrl = URL.createObjectURL(captureFile);
+    const newPhoto: CapturedPhoto = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      file: captureFile,
+      previewUrl,
+    };
+    const nextPhotos = [...capturedPhotos, newPhoto];
+    setCapturedPhotos(nextPhotos);
+    setProofImagePath(null);
+    if (!selectedPhotoId) {
+      setSelectedPhotoId(newPhoto.id);
+    }
+    setErrorMessage('');
+    if (nextPhotos.length >= 3) {
+      stopCamera();
+    }
   };
 
-  const handleRemoveProofImage = () => {
+  const handleSelectPhoto = (photoId: string) => {
+    setSelectedPhotoId(photoId);
+    setErrorMessage('');
+  };
+
+  const handleClearCapturedPhotos = () => {
     stopCamera();
-    if (proofImagePreview) {
-      URL.revokeObjectURL(proofImagePreview);
-    }
-    setProofImagePath(null);
-    setProofImagePreview(null);
+    clearCapturedPhotos();
+    setErrorMessage('');
   };
 
   const handleManualCheck = async () => {
@@ -887,9 +924,14 @@ export default function AllocationDataPage() {
       return;
     }
 
-    // ตรวจสอบว่าต้องอัพโหลดรูปหลักฐานหรือไม่ (เฉพาะกรณี manual)
-    if (saveAuthType === 'Auth_manual' && !proofImagePath) {
-      setErrorMessage('กรุณาอัพโหลดรูปหลักฐานก่อนบันทึกข้อมูล');
+    // ตรวจสอบว่าต้องมีรูปหลักฐานครบ 3 รูปและเลือกภาพที่จะใช้บันทึก (เฉพาะกรณี manual)
+    if (saveAuthType === 'Auth_manual' && capturedPhotos.length < 3) {
+      setErrorMessage('กรุณาถ่ายรูปหลักฐานให้ครบ 3 รูปก่อนบันทึกข้อมูล');
+      return;
+    }
+
+    if (saveAuthType === 'Auth_manual' && !selectedPhotoId) {
+      setErrorMessage('กรุณาเลือกรูปที่ดีที่สุดก่อนบันทึกข้อมูล');
       return;
     }
 
@@ -898,6 +940,16 @@ export default function AllocationDataPage() {
     setErrorMessage('');
 
     try {
+      let uploadedProofImagePath = proofImagePath;
+      if (saveAuthType === 'Auth_manual') {
+        const selectedPhoto = capturedPhotos.find((photo) => photo.id === selectedPhotoId);
+        if (!selectedPhoto) {
+          throw new Error('ไม่พบรูปที่เลือกไว้ กรุณาถ่ายรูปใหม่');
+        }
+        uploadedProofImagePath = await uploadProofFile(selectedPhoto.file);
+        setProofImagePath(uploadedProofImagePath);
+      }
+
       const now = new Date();
       const date = formatDateToDDMMYYYY(now.toISOString());
       const time = formatTimeToHHMMSS();
@@ -921,7 +973,7 @@ export default function AllocationDataPage() {
           officer_citizen_id: verifiedOfficerCitizenId || null, // เลขบัตรประชาชนเจ้าหน้าที่ที่บันทึกข้อมูล
           auth_type: saveAuthType, // Auth_card | Auth_manual
           vstdate, // YYYY-MM-DD (วันที่กดบันทึก)
-          proof_image_path: proofImagePath || null, // Path ของรูปหลักฐาน (เฉพาะกรณี manual)
+          proof_image_path: uploadedProofImagePath || null, // Path ของรูปหลักฐาน (เฉพาะกรณี manual)
         }),
       });
 
@@ -1156,6 +1208,7 @@ export default function AllocationDataPage() {
                         <button
                           onClick={() => {
                             stopCamera();
+                            clearCapturedPhotos();
                             setShowManualInput(false);
                             setManualCitizenId('');
                             setManualHn('');
@@ -1230,85 +1283,107 @@ export default function AllocationDataPage() {
                           />
                         </div>
 
-                        {/* อัพโหลดรูปหลักฐาน */}
+                        {/* ถ่ายรูปหลักฐาน */}
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-2">
                             ถ่ายรูปหลักฐาน <span className="text-red-500">*</span>
                             <span className="text-xs text-gray-500 font-normal ml-2">(รูปภาพที่แสดงว่าผู้รับบริการไม่ได้เอาบัตรประชาชนมาด้วย)</span>
                           </label>
-                          
-                          {!proofImagePreview ? (
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                              <div className="flex flex-col gap-3">
-                                {!cameraActive ? (
-                                  <button
-                                    type="button"
-                                    onClick={startCamera}
-                                    disabled={uploadingProof}
-                                    className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                  >
-                                    เปิดกล้องเพื่อถ่ายรูป
-                                  </button>
-                                ) : (
-                                  <>
-                                    <div className="overflow-hidden rounded-lg border border-gray-300 bg-black">
-                                      <video
-                                        ref={videoRef}
-                                        className="w-full h-auto max-h-72 object-contain"
-                                        playsInline
-                                        muted
-                                        autoPlay
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                            <div className="flex flex-col gap-3">
+                              {!cameraActive ? (
+                                <button
+                                  type="button"
+                                  onClick={startCamera}
+                                  disabled={uploadingProof || capturedPhotos.length >= 3}
+                                  className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  {capturedPhotos.length >= 3 ? 'ถ่ายครบ 3 รูปแล้ว' : 'เปิดกล้องเพื่อถ่ายรูป'}
+                                </button>
+                              ) : (
+                                <>
+                                  <div className="overflow-hidden rounded-lg border border-gray-300 bg-black">
+                                    <video
+                                      ref={videoRef}
+                                      className="w-full h-auto min-h-[320px] max-h-[520px] object-contain"
+                                      playsInline
+                                      muted
+                                      autoPlay
+                                    />
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <button
+                                      type="button"
+                                      onClick={handleCapturePhoto}
+                                      disabled={uploadingProof || capturedPhotos.length >= 3}
+                                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      ถ่ายรูป ({capturedPhotos.length}/3)
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={stopCamera}
+                                      disabled={uploadingProof}
+                                      className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      ปิดกล้อง
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                              <p className="text-xs text-gray-500 text-center">
+                                ถ่ายให้ครบ 3 รูป แล้วเลือกรูปที่ดีที่สุด (จะบันทึกลงฐานข้อมูลตอนกดบันทึกข้อมูล)
+                              </p>
+                              <div className="grid grid-cols-3 gap-3">
+                                {capturedPhotos.map((photo, index) => {
+                                  const isSelected = selectedPhotoId === photo.id;
+                                  return (
+                                    <button
+                                      key={photo.id}
+                                      type="button"
+                                      onClick={() => handleSelectPhoto(photo.id)}
+                                      className={`relative border-2 rounded-lg overflow-hidden transition-all ${
+                                        isSelected ? 'border-green-500 ring-2 ring-green-200' : 'border-gray-200 hover:border-slate-400'
+                                      }`}
+                                      title={`เลือกรูปที่ ${index + 1}`}
+                                    >
+                                      <img
+                                        src={photo.previewUrl}
+                                        alt={`รูปหลักฐาน ${index + 1}`}
+                                        className="w-full h-28 object-cover"
                                       />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                      <button
-                                        type="button"
-                                        onClick={handleCapturePhoto}
-                                        disabled={uploadingProof}
-                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                      >
-                                        {uploadingProof ? 'กำลังอัพโหลด...' : 'ถ่ายรูป'}
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={stopCamera}
-                                        disabled={uploadingProof}
-                                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                      >
-                                        ปิดกล้อง
-                                      </button>
-                                    </div>
-                                  </>
-                                )}
-                                <p className="text-xs text-gray-500 text-center">
-                                  หากเบราว์เซอร์ถามสิทธิ์ใช้งานกล้อง กรุณากดอนุญาต
-                                </p>
+                                      <div className={`text-xs font-semibold py-1 ${isSelected ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                                        {isSelected ? `รูปที่ ${index + 1} (เลือกแล้ว)` : `รูปที่ ${index + 1}`}
+                                      </div>
+                                    </button>
+                                  );
+                                })}
+                                {Array.from({ length: Math.max(0, 3 - capturedPhotos.length) }).map((_, idx) => (
+                                  <div
+                                    key={`placeholder-${idx}`}
+                                    className="border-2 border-dashed border-gray-200 rounded-lg h-36 flex items-center justify-center text-xs text-gray-400"
+                                  >
+                                    ช่องว่างรูปที่ {capturedPhotos.length + idx + 1}
+                                  </div>
+                                ))}
                               </div>
+                              {capturedPhotos.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={handleClearCapturedPhotos}
+                                  className="w-full bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-semibold transition-all"
+                                >
+                                  ลบรูปทั้งหมดและถ่ายใหม่
+                                </button>
+                              )}
                             </div>
-                          ) : (
-                            <div className="relative border border-gray-300 rounded-lg p-4">
-                              <img
-                                src={proofImagePreview}
-                                alt="รูปหลักฐาน"
-                                className="w-full h-auto max-h-64 object-contain rounded-lg"
-                              />
-                              <button
-                                onClick={handleRemoveProofImage}
-                                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
-                                title="ลบรูป"
-                              >
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                </svg>
-                              </button>
-                            </div>
-                          )}
+                          </div>
                           <canvas ref={canvasRef} className="hidden" />
                         </div>
 
                         <button
                           onClick={handleManualCheck}
-                          disabled={manualCitizenId.length !== 13 || loadingRight || !proofImagePath || !manualHn.trim()}
+                          disabled={manualCitizenId.length !== 13 || loadingRight || capturedPhotos.length < 3 || !selectedPhotoId || !manualHn.trim()}
                           className="w-full bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
