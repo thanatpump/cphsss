@@ -273,6 +273,21 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
                 </Link>
+
+                {String(user?.username || '').toLowerCase() === 'adminserver' && (
+                  <Link
+                    href="/admin/checks"
+                    className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-6 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-md"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-4xl mr-4">🗂️</span>
+                      <div>
+                        <h3 className="text-xl font-bold">รายการตรวจสอบ</h3>
+                        <p className="text-indigo-100">ดูข้อมูล ssop_image</p>
+                      </div>
+                    </div>
+                  </Link>
+                )}
               </>
             )}
           </div>

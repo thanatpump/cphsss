@@ -13,13 +13,13 @@ function mapToHcode5(rawHoscode: string): string {
 
 function generateVnTimestamp(): string {
   const now = new Date();
-  const yyyy = String(now.getFullYear());
+  const buddhistYear2Digit = String((now.getFullYear() + 543) % 100).padStart(2, '0');
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const dd = String(now.getDate()).padStart(2, '0');
   const hh = String(now.getHours()).padStart(2, '0');
   const mi = String(now.getMinutes()).padStart(2, '0');
   const ss = String(now.getSeconds()).padStart(2, '0');
-  return `${yyyy}${mm}${dd}${hh}${mi}${ss}`;
+  return `${buddhistYear2Digit}${mm}${dd}${hh}${mi}${ss}`;
 }
 
 export async function POST(request: NextRequest) {
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
         }).format(new Date());
     const normalizedVn = vn || generateVnTimestamp();
     const normalizedHn = hn || '';
-    const normalizedAuthen = authen || `${normalizedHcode}${normalizedVn}`;
+    const normalizedAuthen = authen || `${normalizedHn}${normalizedVn}`;
 
     await db.query(
       `INSERT INTO ssop_image (hcode, cid, vstdate, vn, hn, authen, image_file)
