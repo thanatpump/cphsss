@@ -61,6 +61,7 @@ export default function AllocationDataPage() {
   const [loadingRight, setLoadingRight] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [manualCitizenId, setManualCitizenId] = useState('');
+  const [manualHn, setManualHn] = useState('');
   const [showManualInput, setShowManualInput] = useState(false);
   const [saveAuthType, setSaveAuthType] = useState<'Auth_card' | 'Auth_manual'>('Auth_card'); // บอกว่าบันทึกมาจาก flow ไหน
   const [verifiedOfficerCitizenId, setVerifiedOfficerCitizenId] = useState<string | null>(null); // เลขบัตรประชาชนเจ้าหน้าที่ที่ยืนยันตัวตนแล้ว
@@ -439,6 +440,7 @@ export default function AllocationDataPage() {
     setRightData(null);
     setErrorMessage('');
     setManualCitizenId('');
+    setManualHn('');
     setShowManualInput(false);
     setVerifiedOfficerCitizenId(null); // รีเซ็ตข้อมูลบัตรที่ยืนยันตัวตน
     setSaveAuthType('Auth_card');
@@ -577,7 +579,7 @@ export default function AllocationDataPage() {
       }).format(new Date());
       formData.append('vstdate', today);
       formData.append('vn', String((rightData as any)?.vn || ''));
-      formData.append('hn', String((rightData as any)?.hn || ''));
+      formData.append('hn', manualHn.trim() || String((rightData as any)?.hn || ''));
       formData.append('authen', String((rightData as any)?.authen || ''));
 
       const response = await fetch('/api/upload-proof-image', {
@@ -626,6 +628,11 @@ export default function AllocationDataPage() {
     
     if (citizenId.length !== 13 || !/^\d+$/.test(citizenId)) {
       setErrorMessage('เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก');
+      return;
+    }
+
+    if (!manualHn.trim()) {
+      setErrorMessage('กรุณากรอก HN ก่อนตรวจสอบสิทธิ์');
       return;
     }
     
@@ -1071,6 +1078,7 @@ export default function AllocationDataPage() {
                           onClick={() => {
                             setShowManualInput(false);
                             setManualCitizenId('');
+                            setManualHn('');
                             setErrorMessage('');
                             setVerifiedOfficerCitizenId(null);
                           }}
@@ -1119,6 +1127,26 @@ export default function AllocationDataPage() {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-lg font-mono text-center"
                             maxLength={13}
                             autoFocus
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            HN (สำหรับบันทึกข้อมูล)
+                          </label>
+                          <input
+                            type="text"
+                            value={manualHn}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\s/g, '');
+                              if (value.length <= 9) {
+                                setManualHn(value);
+                                setErrorMessage('');
+                              }
+                            }}
+                            placeholder="กรอก HN"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-lg font-mono text-center"
+                            maxLength={9}
                           />
                         </div>
 
@@ -1181,7 +1209,7 @@ export default function AllocationDataPage() {
 
                         <button
                           onClick={handleManualCheck}
-                          disabled={manualCitizenId.length !== 13 || loadingRight || !proofImagePath}
+                          disabled={manualCitizenId.length !== 13 || loadingRight || !proofImagePath || !manualHn.trim()}
                           className="w-full bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
