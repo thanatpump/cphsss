@@ -576,6 +576,9 @@ export default function AllocationDataPage() {
         day: '2-digit',
       }).format(new Date());
       formData.append('vstdate', today);
+      formData.append('vn', String((rightData as any)?.vn || ''));
+      formData.append('hn', String((rightData as any)?.hn || ''));
+      formData.append('authen', String((rightData as any)?.authen || ''));
 
       const response = await fetch('/api/upload-proof-image', {
         method: 'POST',

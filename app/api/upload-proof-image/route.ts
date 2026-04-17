@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import { getDB } from '@/lib/database';
 
+function mapToHcode5(rawHoscode: string): string {
+  const value = String(rawHoscode || '').trim();
+  if (!/^\d+$/.test(value)) return '';
+  if (value.length > 5) {
+    return String(Math.floor(Number(value) / 100)).padStart(5, '0').slice(0, 5);
+  }
+  return value.padStart(5, '0').slice(0, 5);
+}
+
 export async function POST(request: NextRequest) {
   let db: Awaited<ReturnType<typeof getDB>> | undefined;
   try {
@@ -10,6 +19,9 @@ export async function POST(request: NextRequest) {
     const userSks = String(formData.get('user_sks') || '').trim();
     const citizenId = String(formData.get('citizen_id') || '').trim();
     const vstdate = String(formData.get('vstdate') || '').trim();
+    const vn = String(formData.get('vn') || '').trim();
+    const hn = String(formData.get('hn') || '').trim();
+    const authen = String(formData.get('authen') || '').trim();
 
     if (!file) {
       return NextResponse.json(
@@ -63,15 +75,37 @@ export async function POST(request: NextRequest) {
 
     db = await getDB();
 
-    // แปลง user_sks เป็น hcode 5 หลัก
-    const normalizedHcode = /^\d+$/.test(userSks) ? userSks.padStart(5, '0').slice(0, 5) : null;
-    const normalizedCid = citizenId && /^\d{13}$/.test(citizenId) ? citizenId : null;
-    const normalizedVstdate = /^\d{4}-\d{2}-\d{2}$/.test(vstdate) ? vstdate : null;
+    // แปลง user_sks -> hoscode ใน login_sks -> hcode 5 หลัก
+    let normalizedHcode = '';
+    const [loginRows]: any[] = await db.query(
+      'SELECT hoscode FROM login_sks WHERE user_sks = ? LIMIT 1',
+      [userSks]
+    );
+    if (Array.isArray(loginRows) && loginRows.length > 0) {
+      normalizedHcode = mapToHcode5(String(loginRows[0]?.hoscode || ''));
+    }
+    // fallback กรณีไม่เจอใน login_sks
+    if (!normalizedHcode) {
+      normalizedHcode = mapToHcode5(userSks);
+    }
+
+    const normalizedCid = citizenId && /^\d{13}$/.test(citizenId) ? citizenId : '';
+    const normalizedVstdate = /^\d{4}-\d{2}-\d{2}$/.test(vstdate)
+      ? vstdate
+      : new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Bangkok',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(new Date());
+    const normalizedVn = vn || '';
+    const normalizedHn = hn || '';
+    const normalizedAuthen = authen || '';
 
     await db.query(
       `INSERT INTO ssop_image (hcode, cid, vstdate, vn, hn, authen, image_file)
-       VALUES (?, ?, ?, NULL, NULL, NULL, ?)`,
-      [normalizedHcode, normalizedCid, normalizedVstdate, buffer]
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [normalizedHcode, normalizedCid, normalizedVstdate, normalizedVn, normalizedHn, normalizedAuthen, buffer]
     );
 
     const proofRef = `ssop_image_blob:${Date.now()}`;
