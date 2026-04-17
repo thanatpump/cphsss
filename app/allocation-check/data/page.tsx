@@ -68,6 +68,7 @@ export default function AllocationDataPage() {
   const [proofImagePath, setProofImagePath] = useState<string | null>(null); // Path ของรูปหลักฐาน
   const [proofImagePreview, setProofImagePreview] = useState<string | null>(null); // Preview URL ของรูปหลักฐาน
   const [uploadingProof, setUploadingProof] = useState(false); // สถานะการอัพโหลดรูปหลักฐาน
+  const [cameraActive, setCameraActive] = useState(false); // สถานะการเปิดกล้อง
   const [isVerifyingCard, setIsVerifyingCard] = useState(false); // สถานะการยืนยันตัวตนด้วยบัตร
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -76,6 +77,9 @@ export default function AllocationDataPage() {
   const [cardReaderStatus, setCardReaderStatus] = useState<any>(null);
   const router = useRouter();
   const hasCheckedStatusRef = useRef(false); // ใช้ ref เพื่อป้องกันการเรียกซ้ำ
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     // ตรวจสอบ authentication
@@ -101,6 +105,15 @@ export default function AllocationDataPage() {
       router.push('/allocation-check');
     }
   }, [router]);
+
+  useEffect(() => {
+    return () => {
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+        mediaStreamRef.current = null;
+      }
+    };
+  }, []);
 
   const checkCardReaderStatus = async () => {
     try {
@@ -436,6 +449,7 @@ export default function AllocationDataPage() {
   };
 
   const handleReset = () => {
+    stopCamera();
     setCardData(null);
     setRightData(null);
     setErrorMessage('');
@@ -559,10 +573,7 @@ export default function AllocationDataPage() {
     }
   };
 
-  const handleProofImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  const uploadProofFile = async (file: File) => {
     setUploadingProof(true);
     setErrorMessage('');
 
@@ -609,7 +620,75 @@ export default function AllocationDataPage() {
     }
   };
 
+  const stopCamera = () => {
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setCameraActive(false);
+  };
+
+  const startCamera = async () => {
+    setErrorMessage('');
+    try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error('เบราว์เซอร์นี้ไม่รองรับการใช้งานกล้อง');
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+        audio: false,
+      });
+      mediaStreamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+      setCameraActive(true);
+    } catch (error) {
+      console.error('❌ Error starting camera:', error);
+      setErrorMessage(
+        error instanceof Error
+          ? `ไม่สามารถเปิดกล้องได้: ${error.message}`
+          : 'ไม่สามารถเปิดกล้องได้'
+      );
+      setCameraActive(false);
+    }
+  };
+
+  const handleCapturePhoto = async () => {
+    if (!videoRef.current || !canvasRef.current) {
+      setErrorMessage('ไม่พบอุปกรณ์กล้อง');
+      return;
+    }
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const width = video.videoWidth || 1280;
+    const height = video.videoHeight || 720;
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    if (!context) {
+      setErrorMessage('ไม่สามารถประมวลผลภาพจากกล้องได้');
+      return;
+    }
+    context.drawImage(video, 0, 0, width, height);
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.92)
+    );
+    if (!blob) {
+      setErrorMessage('ไม่สามารถสร้างไฟล์ภาพได้');
+      return;
+    }
+    const captureFile = new File([blob], `proof_${Date.now()}.jpg`, { type: 'image/jpeg' });
+    await uploadProofFile(captureFile);
+    stopCamera();
+  };
+
   const handleRemoveProofImage = () => {
+    stopCamera();
     if (proofImagePreview) {
       URL.revokeObjectURL(proofImagePreview);
     }
@@ -1076,6 +1155,7 @@ export default function AllocationDataPage() {
                         </h3>
                         <button
                           onClick={() => {
+                            stopCamera();
                             setShowManualInput(false);
                             setManualCitizenId('');
                             setManualHn('');
@@ -1153,39 +1233,57 @@ export default function AllocationDataPage() {
                         {/* อัพโหลดรูปหลักฐาน */}
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            อัพโหลดรูปหลักฐาน <span className="text-red-500">*</span>
+                            ถ่ายรูปหลักฐาน <span className="text-red-500">*</span>
                             <span className="text-xs text-gray-500 font-normal ml-2">(รูปภาพที่แสดงว่าผู้รับบริการไม่ได้เอาบัตรประชาชนมาด้วย)</span>
                           </label>
                           
                           {!proofImagePreview ? (
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-slate-400 transition-colors">
-                              <input
-                                type="file"
-                                id="proof-image-input"
-                                accept="image/*"
-                                onChange={handleProofImageUpload}
-                                disabled={uploadingProof}
-                                className="hidden"
-                              />
-                              <label
-                                htmlFor="proof-image-input"
-                                className="cursor-pointer flex flex-col items-center gap-2"
-                              >
-                                {uploadingProof ? (
-                                  <>
-                                    <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-500 border-t-transparent"></div>
-                                    <span className="text-sm text-gray-600">กำลังอัพโหลด...</span>
-                                  </>
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                              <div className="flex flex-col gap-3">
+                                {!cameraActive ? (
+                                  <button
+                                    type="button"
+                                    onClick={startCamera}
+                                    disabled={uploadingProof}
+                                    className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    เปิดกล้องเพื่อถ่ายรูป
+                                  </button>
                                 ) : (
                                   <>
-                                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span className="text-sm text-gray-600">คลิกเพื่อเลือกรูปภาพ</span>
-                                    <span className="text-xs text-gray-500">รองรับไฟล์รูปภาพทุกประเภท</span>
+                                    <div className="overflow-hidden rounded-lg border border-gray-300 bg-black">
+                                      <video
+                                        ref={videoRef}
+                                        className="w-full h-auto max-h-72 object-contain"
+                                        playsInline
+                                        muted
+                                        autoPlay
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                      <button
+                                        type="button"
+                                        onClick={handleCapturePhoto}
+                                        disabled={uploadingProof}
+                                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                      >
+                                        {uploadingProof ? 'กำลังอัพโหลด...' : 'ถ่ายรูป'}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={stopCamera}
+                                        disabled={uploadingProof}
+                                        className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                      >
+                                        ปิดกล้อง
+                                      </button>
+                                    </div>
                                   </>
                                 )}
-                              </label>
+                                <p className="text-xs text-gray-500 text-center">
+                                  หากเบราว์เซอร์ถามสิทธิ์ใช้งานกล้อง กรุณากดอนุญาต
+                                </p>
+                              </div>
                             </div>
                           ) : (
                             <div className="relative border border-gray-300 rounded-lg p-4">
@@ -1205,6 +1303,7 @@ export default function AllocationDataPage() {
                               </button>
                             </div>
                           )}
+                          <canvas ref={canvasRef} className="hidden" />
                         </div>
 
                         <button
