@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
         }).format(new Date());
     const normalizedVn = vn || generateVnTimestamp();
     const normalizedHn = hn || '';
-    const normalizedAuthen = authen || `${normalizedHn}${normalizedVn}`;
+    const normalizedAuthen = authen || `${normalizedHcode}${normalizedVn}`;
 
     await db.query(
       `INSERT INTO ssop_image (hcode, cid, vstdate, vn, hn, authen, image_file)
