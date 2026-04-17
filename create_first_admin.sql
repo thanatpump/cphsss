@@ -1,0 +1,39 @@
+-- สร้าง Admin เซิฟคนแรก
+-- หมายเหตุ: ต้อง hash password ด้วย bcrypt ก่อน insert
+-- ใช้ bcrypt hash ของ password "admin123" (salt rounds = 10)
+-- หรือใช้ Node.js script ด้านล่างเพื่อ generate hash
+
+-- วิธีที่ 1: ใช้ Node.js script เพื่อ generate hash
+-- รันคำสั่ง: node -e "const bcrypt = require('bcrypt'); bcrypt.hash('admin123', 10).then(h => console.log(h));"
+-- แล้ว copy hash ที่ได้มาใส่ใน password field
+
+-- วิธีที่ 2: ใช้ SQL โดยตรง (ต้องมี bcrypt hash แล้ว)
+-- INSERT INTO sso_user (
+--   first_name, 
+--   last_name, 
+--   phone, 
+--   citizen_id, 
+--   birth_date, 
+--   hospital_name, 
+--   position, 
+--   username, 
+--   password, 
+--   role, 
+--   status
+-- ) VALUES (
+--   'Admin',
+--   'System',
+--   '0000000000',
+--   '0000000000000',
+--   '2000-01-01',
+--   'System',
+--   'System Administrator',
+--   'admin',
+--   '$2b$10$YOUR_HASHED_PASSWORD_HERE', -- ต้อง replace ด้วย hash จริง
+--   'admin_server',
+--   'active'
+-- );
+
+-- วิธีที่ 3: ใช้ API endpoint /api/admin/create-first-admin (แนะนำ)
+-- POST /api/admin/create-first-admin
+-- Body: { username, password, first_name, last_name }

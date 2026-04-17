@@ -1,0 +1,83 @@
+{
+  "name": "sso-card-reader-desktop",
+  "version": "1.0.0",
+  "description": "Desktop Application สำหรับอ่านบัตรประชาชน SSO",
+  "main": "electron-main.js",
+  "scripts": {
+    "start": "node main.js",
+    "electron": "electron .",
+    "electron-dev": "electron . --dev",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "dist": "electron-builder --publish=never",
+    "install-deps": "npm install",
+    "build-exe": "pkg . --targets node18-win-x64 --output SSO-CardReader.exe"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "pkg": "^5.8.1"
+  },
+  "build": {
+    "appId": "com.sso.cardreader",
+    "productName": "SSO Card Reader",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron-main.js",
+      "preload.js",
+      "index.html",
+      "renderer.js",
+      "config.json",
+      "ThaiIDCardReader/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SSO Card Reader"
+    },
+    "portable": {
+      "artifactName": "SSO-CardReader-Portable.exe"
+    }
+  },
+  "pkg": {
+    "assets": [
+      "config.json",
+      "ThaiIDCardReader/**/*"
+    ],
+    "scripts": [
+      "main.js"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "author": "",
+  "license": "MIT"
+}
+

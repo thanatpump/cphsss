@@ -1,0 +1,21 @@
+services:
+  sso-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sso-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      NHSO_TOKEN: ${NHSO_TOKEN}
+      NHSO_API_URL: ${NHSO_API_URL}
+      NHSO_HCODE: ${NHSO_HCODE}
+      CARD_READER_URL: ${CARD_READER_URL}

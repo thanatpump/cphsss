@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dist-electron/
+*.exe
+*.log
+card-data.json
+.DS_Store

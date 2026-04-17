@@ -1,0 +1,26 @@
+-- สร้าง table sso_user สำหรับเก็บข้อมูลการสมัครสมาชิก
+CREATE TABLE IF NOT EXISTS sso_user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL COMMENT 'ชื่อ',
+  last_name VARCHAR(100) NOT NULL COMMENT 'นามสกุล',
+  phone VARCHAR(20) NOT NULL COMMENT 'เบอร์โทร',
+  citizen_id VARCHAR(13) NOT NULL UNIQUE COMMENT 'รหัสบัตรประชาชน',
+  birth_date DATE NOT NULL COMMENT 'วันเกิด',
+  hospital_name VARCHAR(255) NOT NULL COMMENT 'ชื่อรพสต',
+  position VARCHAR(100) NOT NULL COMMENT 'ตำแหน่ง',
+  username VARCHAR(50) NOT NULL UNIQUE COMMENT 'ชื่อผู้ใช้',
+  password VARCHAR(255) NOT NULL COMMENT 'รหัสผ่าน (hashed)',
+  role ENUM('user', 'admin_rps', 'admin_server') DEFAULT 'user' COMMENT 'บทบาท',
+  status ENUM('pending', 'active', 'inactive') DEFAULT 'pending' COMMENT 'สถานะ (pending=รอยืนยัน, active=ใช้งานได้, inactive=ถูกระงับ)',
+  approved_by INT NULL COMMENT 'ID ของ admin ที่อนุมัติ',
+  approved_at DATETIME NULL COMMENT 'วันที่อนุมัติ',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'วันที่สมัคร',
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'วันที่อัปเดต',
+  INDEX idx_username (username),
+  INDEX idx_citizen_id (citizen_id),
+  INDEX idx_phone (phone),
+  INDEX idx_role (role),
+  INDEX idx_status (status),
+  INDEX idx_hospital_name (hospital_name),
+  FOREIGN KEY (approved_by) REFERENCES sso_user(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

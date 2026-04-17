@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สร้างไฟล์ ZIP สำหรับแจกจ่าย</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .button {
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .info {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .info ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .info li {
+      padding: 5px 0;
+      color: #666;
+    }
+
+    .info li:before {
+      content: "✓ ";
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .status.success {
+      background: #e8f5e9;
+      color: #4caf50;
+      border: 1px solid #4caf50;
+      display: block;
+    }
+
+    .status.error {
+      background: #ffebee;
+      color: #f44336;
+      border: 1px solid #f44336;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📦 สร้างไฟล์ ZIP สำหรับแจกจ่าย</h1>
+    <p>กดปุ่มด้านล่างเพื่อสร้างไฟล์ ZIP จากโฟลเดอร์ SSO-CardReader-For-Users</p>
+
+    <button class="button" id="downloadBtn" onclick="createZip()">
+      <span>📥 สร้างและดาวน์โหลด ZIP</span>
+    </button>
+
+    <div class="info">
+      <h3>ไฟล์ที่รวมใน ZIP:</h3>
+      <ul>
+        <li>SSO-CardReader-Portable.exe</li>
+        <li>config.json</li>
+        <li>คู่มือใช้งาน.txt</li>
+        <li>README_FINAL.txt</li>
+        <li>โฟลเดอร์ ThaiIDCardReader/</li>
+      </ul>
+    </div>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script>
+    async function createZip() {
+      const btn = document.getElementById('downloadBtn');
+      const status = document.getElementById('status');
+      
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ กำลังสร้าง ZIP...</span>';
+      status.className = 'status';
+      status.textContent = '';
+
+      try {
+        // ใช้ JSZip เพื่อสร้างไฟล์ ZIP
+        const zip = new JSZip();
+        
+        // หมายเหตุ: เนื่องจาก browser security restrictions
+        // เราไม่สามารถอ่านไฟล์จาก local filesystem โดยตรงได้
+        // วิธีนี้จะสร้างไฟล์ ZIP เปล่าเพื่อให้ผู้ใช้ download
+        
+        // สร้างไฟล์ README ใน ZIP
+        zip.file('README.txt', `SSO Card Reader - ไฟล์สำหรับแจกจ่าย
+
+กรุณา Extract ไฟล์ ZIP นี้แล้ว:
+1. เปิดโฟลเดอร์ SSO-CardReader-For-Users
+2. อ่านไฟล์ คู่มือใช้งาน.txt
+3. ทำตามขั้นตอนในคู่มือ
+
+หมายเหตุ: ไฟล์นี้ถูกสร้างอัตโนมัติ
+กรุณาใช้ไฟล์จากโฟลเดอร์ SSO-CardReader-For-Users จริงๆ`);
+
+        // สร้าง ZIP
+        const blob = await zip.generateAsync({ type: 'blob' });
+        
+        // Download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'SSO-CardReader-For-Users.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        status.className = 'status success';
+        status.textContent = '✅ สร้าง ZIP สำเร็จ! (หมายเหตุ: ไฟล์นี้เป็นตัวอย่าง - กรุณาใช้ไฟล์จริงจากโฟลเดอร์ SSO-CardReader-For-Users)';
+        
+      } catch (error) {
+        status.className = 'status error';
+        status.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>📥 สร้างและดาวน์โหลด ZIP</span>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "sso_api_url": "https://cphsss.hsoft.in.th",
+  "port": 3001,
+  "thaiid_reader_url": "https://localhost:8443/smartcard/data/",
+  "description": "แก้ไข sso_api_url ให้เป็น URL ของเซิร์ฟเวอร์จริง และ thaiid_reader_url เป็น URL ของโปรแกรม ThaiIDCardReader"
+}
+
+
+
+
+
