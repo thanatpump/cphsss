@@ -567,6 +567,15 @@ export default function AllocationDataPage() {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('user_sks', username || '');
+      formData.append('citizen_id', (cardData?.citizen_id || manualCitizenId || '').replace(/-/g, ''));
+      const today = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Bangkok',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date());
+      formData.append('vstdate', today);
 
       const response = await fetch('/api/upload-proof-image', {
         method: 'POST',

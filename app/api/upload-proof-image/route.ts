@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { existsSync } from 'fs';
 import path from 'path';
+import { getDB } from '@/lib/database';
 
 export async function POST(request: NextRequest) {
+  let db: Awaited<ReturnType<typeof getDB>> | undefined;
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const userSks = String(formData.get('user_sks') || '').trim();
+    const citizenId = String(formData.get('citizen_id') || '').trim();
+    const vstdate = String(formData.get('vstdate') || '').trim();
 
     if (!file) {
       return NextResponse.json(
@@ -46,39 +49,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // สร้างชื่อไฟล์ใหม่ (timestamp + random + extension)
-    const timestamp = Date.now();
-    const random = Math.random().toString(36).substring(2, 15);
-    const originalExtension = path.extname(file.name) || '.jpg';
-    const newFileName = `${timestamp}_${random}${originalExtension}`;
-
-    // สร้าง directory ถ้ายังไม่มี
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'proof');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
+    // จำกัดขนาดไฟล์ 5 MB
+    const maxBytes = 5 * 1024 * 1024;
+    if (file.size > maxBytes) {
+      return NextResponse.json(
+        { success: false, error: 'ไฟล์มีขนาดใหญ่เกินไป (สูงสุด 5 MB)' },
+        { status: 400 }
+      );
     }
 
-    // บันทึกไฟล์
-    const filePath = path.join(uploadDir, newFileName);
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    await writeFile(filePath, buffer);
+    db = await getDB();
 
-    // สร้าง path สำหรับเก็บใน database (relative path จาก public)
-    const dbPath = `/uploads/proof/${newFileName}`;
+    // แปลง user_sks เป็น hcode 5 หลัก
+    const normalizedHcode = /^\d+$/.test(userSks) ? userSks.padStart(5, '0').slice(0, 5) : null;
+    const normalizedCid = citizenId && /^\d{13}$/.test(citizenId) ? citizenId : null;
+    const normalizedVstdate = /^\d{4}-\d{2}-\d{2}$/.test(vstdate) ? vstdate : null;
 
-    console.log('✅ อัพโหลดรูปหลักฐานสำเร็จ:', dbPath);
+    await db.query(
+      `INSERT INTO ssop_image (hcode, cid, vstdate, vn, hn, authen, image_file)
+       VALUES (?, ?, ?, NULL, NULL, NULL, ?)`,
+      [normalizedHcode, normalizedCid, normalizedVstdate, buffer]
+    );
+
+    const proofRef = `ssop_image_blob:${Date.now()}`;
+    console.log('✅ อัพโหลดรูปหลักฐานลง ssop_image สำเร็จ:', {
+      hcode: normalizedHcode,
+      cid: normalizedCid,
+      vstdate: normalizedVstdate,
+      size: file.size,
+    });
 
     return NextResponse.json({
       success: true,
       data: {
-        path: dbPath,
-        fileName: newFileName,
+        path: proofRef,
+        fileName: path.basename(file.name),
         originalName: file.name,
         size: file.size,
       },
-      message: 'อัพโหลดรูปหลักฐานสำเร็จ',
+      message: 'อัพโหลดรูปหลักฐานสำเร็จ (เก็บลงฐานข้อมูล)',
     });
   } catch (error) {
     console.error('❌ Error uploading proof image:', error);
@@ -90,5 +102,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+  } finally {
+    try {
+      await db?.end();
+    } catch {
+      // ignore close errors
+    }
   }
 }
