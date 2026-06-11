@@ -6,12 +6,30 @@ import {
   matchInvNoWithAuthen,
   parseMonthValue,
 } from '@/lib/data-match-authen';
-import { countSognstmmByMonth, fetchSognstmmByMonth } from '@/lib/data-match-db';
+import {
+  DataMatchSource,
+  countSognByMonth,
+  fetchSognByMonth,
+} from '@/lib/data-match-db';
+
+function parseSource(value: string | null | undefined): DataMatchSource {
+  if (value === 'sognstmm' || value === 'sognstmp' || value === 'all') {
+    return value;
+  }
+  return 'all';
+}
+
+function sourceLabel(source: DataMatchSource): string {
+  if (source === 'sognstmm') return 'SOGNSTMM (ผู้ป่วยนอก)';
+  if (source === 'sognstmp') return 'SOGNSTMP (ผู้ป่วยนอกพิเศษ)';
+  return 'SOGNSTMM + SOGNSTMP';
+}
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const month = searchParams.get('month')?.trim() || null;
+    const source = parseSource(searchParams.get('source'));
 
     if (!month) {
       return NextResponse.json(
@@ -27,16 +45,19 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const [authenTotal, sognstmmTotal] = await Promise.all([
+    const [authenTotal, sognCounts] = await Promise.all([
       countAuthenInDb(null, month),
-      countSognstmmByMonth(month),
+      countSognByMonth(month, source),
     ]);
 
     return NextResponse.json({
       success: true,
       month,
+      source,
       authenTotal,
-      sognstmmTotal,
+      sognstmmTotal: sognCounts.sognstmm,
+      sognstmpTotal: sognCounts.sognstmp,
+      sognTotal: sognCounts.total,
     });
   } catch (error) {
     console.error('Error in data-match GET:', error);
@@ -51,6 +72,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const month = String(body.month || '').trim();
+    const source = parseSource(body.source);
 
     if (!month) {
       return NextResponse.json(
@@ -66,10 +88,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const dbResult = await fetchSognstmmByMonth(month);
+    const dbResult = await fetchSognByMonth(month, source);
     if (!dbResult || dbResult.parsed.billCount === 0) {
       return NextResponse.json(
-        { error: `ไม่พบข้อมูล sognstmm สำหรับเดือน ${month}` },
+        {
+          error: `ไม่พบข้อมูล ${sourceLabel(source)} สำหรับเดือน ${month}`,
+        },
         { status: 400 }
       );
     }
@@ -83,7 +107,7 @@ export async function POST(request: NextRequest) {
 
     if (invNos.length === 0) {
       return NextResponse.json(
-        { error: 'ไม่พบเลข InvNo ใน sognstmm' },
+        { error: 'ไม่พบเลข InvNo ในข้อมูลที่เลือก' },
         { status: 400 }
       );
     }
@@ -109,7 +133,8 @@ export async function POST(request: NextRequest) {
       },
       compare: {
         source: 'database',
-        dbTable: 'sognstmm',
+        dbTable: source === 'all' ? 'sognstmm+sognstmp' : source,
+        sourceLabel: sourceLabel(source),
         fileName: compareParsed.fileName,
         fileType: compareParsed.fileType,
         stmDoc: dbResult.matchedStmDoc,
@@ -118,6 +143,7 @@ export async function POST(request: NextRequest) {
         billTotal: compareParsed.billTotal,
         uniqueInvNoCount: result.summary.uniqueInvNoCount,
         month,
+        matchSource: source,
       },
       result,
     });

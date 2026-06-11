@@ -66,9 +66,12 @@ interface AuthenMatchResult {
   byHcare: HcareGroup[];
 }
 
+const MATCH_SOURCE = 'all' as const;
+
 interface ApiResponse {
   compare: {
     source: string;
+    sourceLabel?: string;
     dbTable?: string;
     fileName: string;
     fileType: string;
@@ -224,6 +227,7 @@ export default function DataMatchPage() {
   const [month, setMonth] = useState(getCurrentMonth);
   const [authenTotal, setAuthenTotal] = useState<number | null>(null);
   const [sognstmmTotal, setSognstmmTotal] = useState<number | null>(null);
+  const [sognstmpTotal, setSognstmpTotal] = useState<number | null>(null);
   const [selectedHcare, setSelectedHcare] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -233,23 +237,27 @@ export default function DataMatchPage() {
     if (!monthValue) {
       setAuthenTotal(null);
       setSognstmmTotal(null);
+      setSognstmpTotal(null);
       return;
     }
 
     try {
-      const params = new URLSearchParams({ month: monthValue });
+      const params = new URLSearchParams({ month: monthValue, source: MATCH_SOURCE });
       const res = await fetch(`/api/data-match?${params.toString()}`);
       const data = await res.json();
       if (res.ok) {
         setAuthenTotal(data.authenTotal ?? 0);
         setSognstmmTotal(data.sognstmmTotal ?? 0);
+        setSognstmpTotal(data.sognstmpTotal ?? 0);
       } else {
         setAuthenTotal(null);
         setSognstmmTotal(null);
+        setSognstmpTotal(null);
       }
     } catch {
       setAuthenTotal(null);
       setSognstmmTotal(null);
+      setSognstmpTotal(null);
     }
   }, []);
 
@@ -325,7 +333,7 @@ export default function DataMatchPage() {
       const res = await fetch('/api/data-match', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ month }),
+        body: JSON.stringify({ month, source: MATCH_SOURCE }),
       });
       const data = await res.json();
 
@@ -356,17 +364,25 @@ export default function DataMatchPage() {
           <h1 className="mb-2 text-3xl font-bold text-gray-900">ชน InvNo กับ authen</h1>
         </div>
 
-        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-lg font-bold text-emerald-900">ฐานข้อมูล sognstmm</h2>
+            <h2 className="mb-2 text-lg font-bold text-emerald-900">SOGNSTMM</h2>
             <p className="text-sm text-emerald-900">
               เดือน {month || '-'}:{' '}
-              <strong>{sognstmmTotal != null ? sognstmmTotal.toLocaleString('th-TH') : '...'}</strong> รายการทั้งหมด
+              <strong>{sognstmmTotal != null ? sognstmmTotal.toLocaleString('th-TH') : '...'}</strong> รายการ
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-orange-200 bg-orange-50 p-6 shadow-lg">
+            <h2 className="mb-2 text-lg font-bold text-orange-900">SOGNSTMP</h2>
+            <p className="text-sm text-orange-900">
+              เดือน {month || '-'}:{' '}
+              <strong>{sognstmpTotal != null ? sognstmpTotal.toLocaleString('th-TH') : '...'}</strong> รายการ
             </p>
           </div>
 
           <div className="rounded-xl border border-blue-200 bg-blue-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-lg font-bold text-blue-900">ฐานข้อมูล authen_code</h2>
+            <h2 className="mb-2 text-lg font-bold text-blue-900">authen_code</h2>
             <p className="text-sm text-blue-900">
               เดือน {month || '-'}:{' '}
               <strong>{authenTotal != null ? authenTotal.toLocaleString('th-TH') : '...'}</strong> รายการ
@@ -386,7 +402,7 @@ export default function DataMatchPage() {
             className="w-full max-w-xs rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none"
           />
           <p className="mt-2 text-xs text-gray-500">
-            ดึง sognstmm ทั้งหมดของเดือนที่เลือก แล้วแสดงผลแยกตามแต่ละสถานบริการ
+            ชน SOGNSTMM + SOGNSTMP กับ authen_code แล้วแสดงสรุปแยกตามสถานบริการ
           </p>
         </div>
 

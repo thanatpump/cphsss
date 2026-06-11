@@ -8,6 +8,8 @@ import {
 } from '@/lib/sogn-xml-parser';
 
 export type DbTableType = 'sognstmm' | 'sognstmp' | 'signstmm' | 'signstms';
+export type DataMatchSource = 'sognstmm' | 'sognstmp' | 'all';
+export type SognMatchTable = 'sognstmm' | 'sognstmp';
 
 const FILE_TYPE_TO_TABLE: Partial<Record<FileType, DbTableType>> = {
   SOGNSTMM: 'sognstmm',
@@ -214,24 +216,30 @@ export async function fetchReferenceFromDb(
   return null;
 }
 
-export async function countSognstmmByMonth(month: string): Promise<number> {
+export async function countSognTableByMonth(
+  table: SognMatchTable,
+  month: string
+): Promise<number> {
   const parsed = parseMonthValue(month);
   if (!parsed) return 0;
 
   const db = await getDB();
   const [rows] = await db.query(
-    'SELECT COUNT(*) as cnt FROM sognstmm WHERE STMdoc LIKE ?',
+    `SELECT COUNT(*) as cnt FROM ${table} WHERE STMdoc LIKE ?`,
     [`%_${parsed.yyyymm}`]
   );
   return Number((rows as Array<{ cnt: number }>)[0]?.cnt ?? 0);
 }
 
-export async function fetchSognstmmByMonth(month: string): Promise<DbFetchResult | null> {
+export async function fetchSognTableByMonth(
+  table: SognMatchTable,
+  month: string
+): Promise<DbFetchResult | null> {
   const parsed = parseMonthValue(month);
   if (!parsed) return null;
 
-  const docColumn = getDocColumn('sognstmm');
-  const rows = await queryRows('sognstmm', `${docColumn} LIKE ?`, [`%_${parsed.yyyymm}`]);
+  const docColumn = getDocColumn(table);
+  const rows = await queryRows(table, `${docColumn} LIKE ?`, [`%_${parsed.yyyymm}`]);
   if (rows.length === 0) return null;
 
   const uniqueStmDocs = [
@@ -240,11 +248,91 @@ export async function fetchSognstmmByMonth(month: string): Promise<DbFetchResult
   const matchedStmDoc =
     uniqueStmDocs.length === 1
       ? uniqueStmDocs[0]
-      : `รอบ ${parsed.yyyymm} (${uniqueStmDocs.length} รอบ)`;
+      : `${table} รอบ ${parsed.yyyymm} (${uniqueStmDocs.length} รอบ)`;
 
   return {
-    parsed: rowsToParsedFile('sognstmm', matchedStmDoc, rows),
+    parsed: rowsToParsedFile(table, matchedStmDoc, rows),
     matchedStmDoc,
     matchMode: 'exact',
   };
+}
+
+export function resolveDataMatchTables(source: DataMatchSource): SognMatchTable[] {
+  if (source === 'all') return ['sognstmm', 'sognstmp'];
+  return [source];
+}
+
+export async function countSognByMonth(
+  month: string,
+  source: DataMatchSource = 'all'
+): Promise<{ sognstmm: number; sognstmp: number; total: number }> {
+  const tables = resolveDataMatchTables(source);
+  const counts = await Promise.all(
+    tables.map(async (table) => ({
+      table,
+      count: await countSognTableByMonth(table, month),
+    }))
+  );
+
+  const sognstmm = counts.find((item) => item.table === 'sognstmm')?.count ?? 0;
+  const sognstmp = counts.find((item) => item.table === 'sognstmp')?.count ?? 0;
+
+  return {
+    sognstmm: source === 'sognstmp' ? 0 : sognstmm,
+    sognstmp: source === 'sognstmm' ? 0 : sognstmp,
+    total: counts.reduce((sum, item) => sum + item.count, 0),
+  };
+}
+
+export async function fetchSognByMonth(
+  month: string,
+  source: DataMatchSource = 'all'
+): Promise<DbFetchResult | null> {
+  const tables = resolveDataMatchTables(source);
+  const results = (
+    await Promise.all(tables.map((table) => fetchSognTableByMonth(table, month)))
+  ).filter((result): result is DbFetchResult => result != null);
+
+  if (results.length === 0) return null;
+
+  const bills = results.flatMap((result) => result.parsed.bills);
+  if (bills.length === 0) return null;
+
+  const parsed = parseMonthValue(month);
+  const tableLabel =
+    source === 'all' ? 'sognstmm + sognstmp' : source;
+  const matchedStmDoc =
+    results.length === 1
+      ? results[0].matchedStmDoc
+      : `รอบ ${parsed?.yyyymm ?? month} (${results.map((r) => r.matchedStmDoc).join(' | ')})`;
+
+  const primary = results[0].parsed;
+
+  return {
+    parsed: {
+      ...primary,
+      fileName: `ฐานข้อมูล (${tableLabel})`,
+      fileType:
+        source === 'sognstmp'
+          ? 'SOGNSTMP'
+          : source === 'sognstmm'
+            ? 'SOGNSTMM'
+            : primary.fileType,
+      billCount: bills.length,
+      billTotal: bills.reduce((sum, bill) => sum + bill.total, 0),
+      bills,
+    },
+    matchedStmDoc,
+    matchMode: 'exact',
+  };
+}
+
+/** @deprecated use countSognTableByMonth */
+export async function countSognstmmByMonth(month: string): Promise<number> {
+  return countSognTableByMonth('sognstmm', month);
+}
+
+/** @deprecated use fetchSognByMonth */
+export async function fetchSognstmmByMonth(month: string): Promise<DbFetchResult | null> {
+  return fetchSognTableByMonth('sognstmm', month);
 }
