@@ -246,6 +246,19 @@ export default function AdminDashboardPage() {
               </div>
             </Link>
 
+            <Link
+              href="/admin/report"
+              className="bg-gradient-to-r from-teal-500 to-teal-600 text-white p-6 rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all shadow-md"
+            >
+              <div className="flex items-center">
+                <span className="text-4xl mr-4">📊</span>
+                <div>
+                  <h3 className="text-xl font-bold">รายงานการให้บริการ</h3>
+                  <p className="text-teal-100">จำนวนผู้รับบริการรายวัน</p>
+                </div>
+              </div>
+            </Link>
+
             {user?.role === 'admin_server' && (
               <>
                 <Link

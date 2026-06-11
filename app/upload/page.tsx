@@ -27,6 +27,9 @@ export default function UploadPage() {
           <Link href="/upload-sognstmp">
             <button className="w-full bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors">อัปโหลด SOGNSTMP (ผู้ป่วยนอกพิเศษ)</button>
           </Link>
+          <Link href="/data-match">
+            <button className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">ชน InvNo กับ authen</button>
+          </Link>
         </div>
       </div>
     </div>
