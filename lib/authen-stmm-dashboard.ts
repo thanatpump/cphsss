@@ -81,7 +81,10 @@ export interface AuthenStmmCompareData {
   total_facilities: number;
 }
 
-function avgMetric(points: AuthenStmmComparePoint[], key: Exclude<AuthenStmmCompareMetric, 'match_rate'>) {
+function avgMetric(
+  points: AuthenStmmComparePoint[],
+  key: 'joined_total' | 'vm_match' | 'vm_mismatch' | 'only_authen' | 'only_stmm'
+) {
   if (points.length === 0) return 0;
   const sum = points.reduce((total, point) => total + point[key], 0);
   return Math.round((sum / points.length) * 10) / 10;
