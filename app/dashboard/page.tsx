@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthenStmmMatchPanel from '../components/AuthenStmmMatchPanel';
 
 interface PaginationInfo {
   page: number;
@@ -501,6 +502,16 @@ export default function DashboardPage() {
         <div className="mb-8">
           {renderLineChart()}
         </div>
+
+        {/* Authen vs STMM */}
+        {username && (
+          <div className="mb-8">
+            <AuthenStmmMatchPanel
+              auth={{ userSks: username }}
+              title={`เทียบ Authen กับ STMM${hosname ? ` · ${hosname}` : ''}`}
+            />
+          </div>
+        )}
 
         {/* Data Tables */}
         {loading ? (

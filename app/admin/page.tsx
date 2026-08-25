@@ -259,6 +259,19 @@ export default function AdminDashboardPage() {
               </div>
             </Link>
 
+            <Link
+              href="/admin/authen-stmm"
+              className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white p-6 rounded-lg hover:from-cyan-600 hover:to-cyan-700 transition-all shadow-md"
+            >
+              <div className="flex items-center">
+                <span className="text-4xl mr-4">🔗</span>
+                <div>
+                  <h3 className="text-xl font-bold">เทียบ Authen กับ STMM</h3>
+                  <p className="text-cyan-100">ดูทุกสถานบริการ + ดาวน์โหลด Excel</p>
+                </div>
+              </div>
+            </Link>
+
             {user?.role === 'admin_server' && (
               <>
                 <Link

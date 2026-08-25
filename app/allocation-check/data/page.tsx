@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthenStmmMatchPanel from '@/app/components/AuthenStmmMatchPanel';
 
 interface CardReaderData {
   citizen_id: string;
@@ -60,6 +61,7 @@ export default function AllocationDataPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState<number | null>(null);
   const [hospcode, setHospcode] = useState('');
   const [userRole, setUserRole] = useState<string | null>(null);
   const [cardData, setCardData] = useState<CardReaderData | null>(null);
@@ -99,6 +101,7 @@ export default function AllocationDataPage() {
         const userData = JSON.parse(storedUser);
         setAuthenticated(true);
         setUsername(userData.username || '');
+        setUserId(userData.id || null);
         // สำหรับ allocation-check อาจจะไม่ต้องใช้ hospcode หรือใช้จาก userData
         setHospcode(userData.hospital_name || '');
         setUserRole(userData.role || null);
@@ -1787,6 +1790,26 @@ export default function AllocationDataPage() {
             </div>
           </div>
         </div>
+
+        {userId && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            {(userRole === 'admin_server' || userRole === 'admin_rps') && (
+              <div className="mb-4 flex justify-end">
+                <Link
+                  href="/admin/authen-stmm"
+                  className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-semibold text-sm"
+                >
+                  ดูทุกสถานบริการ (Admin)
+                </Link>
+              </div>
+            )}
+            <AuthenStmmMatchPanel
+              auth={{ userId }}
+              isAdmin={false}
+              title={`เทียบ Authen กับ STMM${hospcode ? ` · ${hospcode}` : ''}`}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
