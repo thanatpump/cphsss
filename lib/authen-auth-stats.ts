@@ -2,7 +2,7 @@ import { getDB } from '@/lib/database';
 import { parseDateParam } from '@/lib/auth-date-range';
 
 export const WITH_CARD_AUTH_TYPES = ['Auth_hospital', 'Auth_hosxp', 'Auth_OnSmartCard'] as const;
-export const NO_CARD_AUTH_TYPES = ['Auth_card', 'Auth_manual'] as const;
+export const NO_CARD_AUTH_TYPES = ['Auth_card', 'Auth_manual', 'Auth_NoSmartCard', 'NoSmartcard'] as const;
 
 export interface AuthVerificationStats {
   dateFrom: string | null;
@@ -45,6 +45,13 @@ function buildFilters(options: {
   return { where, params };
 }
 
+function mapAuthStatsRow(row: any) {
+  const total = Number(row.total ?? 0);
+  const with_card = Number(row.with_card ?? 0);
+  const no_card = total - with_card;
+  return { total, with_card, no_card };
+}
+
 export async function fetchAuthVerificationStats(options?: {
   hcode?: string | null;
   dateFrom?: string | null;
@@ -56,7 +63,6 @@ export async function fetchAuthVerificationStats(options?: {
   const { where, params } = buildFilters({ hcode, dateFrom, dateTo });
 
   const withCardPlaceholders = WITH_CARD_AUTH_TYPES.map(() => '?').join(', ');
-  const noCardPlaceholders = NO_CARD_AUTH_TYPES.map(() => '?').join(', ');
 
   const db = await getDB();
   try {
@@ -64,22 +70,19 @@ export async function fetchAuthVerificationStats(options?: {
       `
       SELECT
         COUNT(*) AS total,
-        SUM(CASE WHEN auth_type IN (${withCardPlaceholders}) THEN 1 ELSE 0 END) AS with_card,
-        SUM(CASE WHEN auth_type IN (${noCardPlaceholders}) THEN 1 ELSE 0 END) AS no_card
+        SUM(CASE WHEN auth_type IN (${withCardPlaceholders}) THEN 1 ELSE 0 END) AS with_card
       FROM authen_code
       ${where}
       `,
-      [...WITH_CARD_AUTH_TYPES, ...NO_CARD_AUTH_TYPES, ...params]
+      [...WITH_CARD_AUTH_TYPES, ...params]
     );
 
-    const row = rows[0] || {};
+    const stats = mapAuthStatsRow(rows[0] || {});
     return {
       dateFrom,
       dateTo,
       hcode,
-      total: Number(row.total ?? 0),
-      with_card: Number(row.with_card ?? 0),
-      no_card: Number(row.no_card ?? 0),
+      ...stats,
     };
   } finally {
     await db.end();
@@ -95,7 +98,6 @@ export async function fetchAuthVerificationStatsByFacility(options?: {
   const { where, params } = buildFilters({ dateFrom, dateTo, alias: 'ac' });
 
   const withCardPlaceholders = WITH_CARD_AUTH_TYPES.map(() => '?').join(', ');
-  const noCardPlaceholders = NO_CARD_AUTH_TYPES.map(() => '?').join(', ');
 
   const db = await getDB();
   try {
@@ -104,13 +106,12 @@ export async function fetchAuthVerificationStatsByFacility(options?: {
       SELECT
         ac.hcode,
         COUNT(*) AS total,
-        SUM(CASE WHEN ac.auth_type IN (${withCardPlaceholders}) THEN 1 ELSE 0 END) AS with_card,
-        SUM(CASE WHEN ac.auth_type IN (${noCardPlaceholders}) THEN 1 ELSE 0 END) AS no_card
+        SUM(CASE WHEN ac.auth_type IN (${withCardPlaceholders}) THEN 1 ELSE 0 END) AS with_card
       FROM authen_code ac
       ${where.replace(' WHERE 1=1', ' WHERE ac.hcode IS NOT NULL AND ac.hcode != ""')}
       GROUP BY ac.hcode
       `,
-      [...WITH_CARD_AUTH_TYPES, ...NO_CARD_AUTH_TYPES, ...params]
+      [...WITH_CARD_AUTH_TYPES, ...params]
     );
 
     const [nameRows]: any[] = await db.query(
@@ -154,9 +155,7 @@ export async function fetchAuthVerificationStatsByFacility(options?: {
       const hcode = String(row.hcode ?? '').trim();
       if (!hcode) continue;
       const item = ensure(hcode);
-      item.total = Number(row.total ?? 0);
-      item.with_card = Number(row.with_card ?? 0);
-      item.no_card = Number(row.no_card ?? 0);
+      Object.assign(item, mapAuthStatsRow(row));
     }
 
     return [...map.values()]

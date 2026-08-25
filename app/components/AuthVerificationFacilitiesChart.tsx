@@ -22,15 +22,15 @@ const BAR_CONFIG = [
   },
   {
     key: 'with_card' as const,
-    label: 'เอาบัตรมา',
+    label: 'ยืนยันตัวตน',
     subtitle: 'Auth_hospital · Auth_hosxp · Auth_OnSmartCard',
     color: 'bg-teal-500',
     ring: 'ring-teal-300',
   },
   {
     key: 'no_card' as const,
-    label: 'ไม่มีบัตร',
-    subtitle: 'Auth_card · Auth_manual',
+    label: 'ไม่ได้ยืนยันตัวตน',
+    subtitle: 'Auth_card · Auth_manual · Auth_NoSmartCard · NoSmartcard',
     color: 'bg-orange-500',
     ring: 'ring-orange-300',
   },
@@ -76,7 +76,7 @@ function FacilityMiniChart({ facility, highlight }: { facility: FacilityStats; h
 export default function AuthVerificationFacilitiesChart({
   highlightHcode,
   title = 'สถิติการยืนยันตัวตนแต่ละ รพสต.',
-  subtitle = 'กราฟ 3 แท่ง: ทั้งหมด · เอาบัตรมา · ไม่มีบัตร',
+  subtitle = 'กราฟ 3 แท่ง: ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน',
 }: {
   highlightHcode?: string;
   title?: string;

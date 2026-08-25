@@ -13,8 +13,8 @@ export interface GroupedFacilityStats {
 
 const SERIES = [
   { key: 'total' as const, name: 'ทั้งหมด', color: '#9333ea' },
-  { key: 'with_card' as const, name: 'เอาบัตรมา', color: '#14b8a6' },
-  { key: 'no_card' as const, name: 'ไม่มีบัตร', color: '#f97316' },
+  { key: 'with_card' as const, name: 'ยืนยันตัวตน', color: '#14b8a6' },
+  { key: 'no_card' as const, name: 'ไม่ได้ยืนยันตัวตน', color: '#f97316' },
 ];
 
 export default function AuthVerificationGroupedChart({
@@ -146,7 +146,7 @@ export default function AuthVerificationGroupedChart({
     <div className="rounded-xl border border-indigo-100 bg-gradient-to-b from-indigo-50/60 to-white p-4">
       <h3 className="text-lg font-bold text-gray-900">กราฟรวมทุก รพสต.</h3>
       <p className="text-sm text-gray-600 mt-1 mb-4">
-        Grouped bar chart · เปรียบเทียบ ทั้งหมด / เอาบัตรมา / ไม่มีบัตร ต่อหน่วยบริการ
+        Grouped bar chart · เปรียบเทียบ ทั้งหมด / ยืนยันตัวตน / ไม่ได้ยืนยันตัวตน ต่อหน่วยบริการ
       </p>
       {facilities.length === 0 ? (
         <div className="py-10 text-center text-gray-500">ไม่มีข้อมูลสำหรับกราฟรวม</div>

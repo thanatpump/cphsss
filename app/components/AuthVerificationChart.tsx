@@ -19,15 +19,15 @@ const BAR_CONFIG = [
   },
   {
     key: 'with_card' as const,
-    label: 'เอาบัตรมา',
+    label: 'ยืนยันตัวตน',
     subtitle: 'Auth_hospital · Auth_hosxp · Auth_OnSmartCard',
     color: 'bg-teal-500',
     ring: 'ring-teal-300',
   },
   {
     key: 'no_card' as const,
-    label: 'ไม่มีบัตร',
-    subtitle: 'Auth_card · Auth_manual',
+    label: 'ไม่ได้ยืนยันตัวตน',
+    subtitle: 'Auth_card · Auth_manual · Auth_NoSmartCard · NoSmartcard',
     color: 'bg-orange-500',
     ring: 'ring-orange-300',
   },
@@ -94,7 +94,7 @@ export default function AuthVerificationChart({
         <div>
           <h2 className="text-xl font-bold text-gray-900">{title}</h2>
           <p className="text-sm text-gray-600 mt-1">
-            {subtitle || 'กราฟ 3 แท่ง: ทั้งหมด · เอาบัตรมา · ไม่มีบัตร'}
+            {subtitle || 'กราฟ 3 แท่ง: ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน'}
           </p>
         </div>
         <AuthDateRangeFilter
