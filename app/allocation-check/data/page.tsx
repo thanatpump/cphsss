@@ -1792,9 +1792,9 @@ export default function AllocationDataPage() {
         </div>
 
         {userId && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-8">
             {(userRole === 'admin_server' || userRole === 'admin_rps') && (
-              <div className="mb-4 flex justify-end">
+              <div className="flex justify-end">
                 <Link
                   href="/admin/authen-stmm"
                   className="inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-semibold text-sm"
