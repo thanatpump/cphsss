@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useAuth } from './contexts/AuthContext';
 import AuthVerificationFacilitiesChart from './components/AuthVerificationFacilitiesChart';
 
 interface AllocationUser {
@@ -18,7 +17,6 @@ const NAV_ITEMS = [
 ] as const;
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
   const [allocationUser, setAllocationUser] = useState<AllocationUser | null>(null);
 
   useEffect(() => {
@@ -32,18 +30,6 @@ export default function Home() {
       }
     }
   }, []);
-
-  if (isAuthenticated) {
-    window.location.href = '/dashboard';
-    return (
-      <div className="min-h-screen home-shell flex items-center justify-center">
-        <div className="text-center home-fade">
-          <div className="mx-auto mb-4 h-10 w-10 border-2 border-[#0b3d4a] border-t-transparent rounded-full animate-spin" />
-          <p className="text-[#5c6b73] font-[family-name:var(--font-sarabun)]">กำลังเข้าสู่ระบบ...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="home-shell relative">
