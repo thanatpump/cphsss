@@ -94,7 +94,7 @@ export default function Icd10DataUploadPanel({ onImported }: { onImported?: () =
 
   return (
     <div className="space-y-4">
-      <section className="bg-white rounded-xl border border-[#d8e0e5] p-5 sm:p-6">
+      <section className="report-panel p-5 sm:p-6">
         <h3 className="text-lg font-semibold text-[#0b3d4a]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
           อัปโหลดข้อมูล ICD-10
         </h3>
@@ -104,7 +104,7 @@ export default function Icd10DataUploadPanel({ onImported }: { onImported?: () =
           {' '}— รองรับ <strong>OPD*.TXT</strong> และ <strong>IPD*.TXT</strong> (คั่นด้วย | )
         </p>
 
-        <div className="mt-5 border border-dashed border-[#a8b8c0] bg-[#fafbfc] px-6 py-8 text-center">
+        <div className="mt-5 rounded-xl border border-dashed border-[#a8b8c0] bg-[#fafbfc] px-6 py-8 text-center">
           <p className="text-sm text-[#0b3d4a] font-medium mb-3">เลือกหลายไฟล์หรือทั้งโฟลเดอร์</p>
           <div className="flex flex-wrap justify-center gap-2">
             <label className="inline-flex items-center px-4 py-2 bg-[#0b3d4a] text-white text-sm font-medium cursor-pointer hover:bg-[#072a33]">
@@ -222,7 +222,7 @@ export default function Icd10DataUploadPanel({ onImported }: { onImported?: () =
         )}
       </section>
 
-      <section className="bg-white rounded-xl border border-[#d8e0e5] p-5 sm:p-6">
+      <section className="report-panel p-5 sm:p-6">
         <div className="flex items-center justify-between gap-3 mb-3">
           <h3 className="text-base font-semibold text-[#0b3d4a]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
             ชุดข้อมูลที่อยู่ในระบบ

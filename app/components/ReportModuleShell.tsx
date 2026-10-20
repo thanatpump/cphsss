@@ -24,7 +24,7 @@ export default function ReportModuleShell({
   return (
     <div className="app-shell relative min-h-screen text-[#15202b]">
       <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-[1400px] mx-auto px-4 pt-3 pb-0">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-5 pt-3 pb-0">
           <div className="min-h-14 flex items-center justify-between gap-3 py-2">
             <div className="min-w-0 flex items-center gap-3">
               <div className="h-10 w-10 shrink-0 rounded-md bg-[#1a7a6d] flex items-center justify-center">
@@ -43,38 +43,32 @@ export default function ReportModuleShell({
                   แดชบอร์ดรายงาน
                 </p>
                 <h1
-                  className="text-lg font-bold text-white truncate"
+                  className="text-lg font-semibold text-white truncate leading-tight"
                   style={{ fontFamily: 'var(--font-ibm-plex)' }}
                 >
                   {title}
                 </h1>
                 {(subtitle || current?.description) && (
-                  <p className="text-xs text-white/65 truncate">{subtitle || current?.description}</p>
+                  <p className="text-xs text-white/60 truncate mt-0.5">
+                    {subtitle || current?.description}
+                  </p>
                 )}
               </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
-              {actions}
-              <Link
-                href="/"
-                className="px-3 py-2 rounded-md bg-white/10 hover:bg-white/15 text-white text-sm font-semibold border border-white/15"
-              >
-                หน้าหลัก
-              </Link>
-            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>
           </div>
 
-          <nav className="mt-1 flex items-end gap-1 overflow-x-auto -mb-px">
+          <nav className="mt-1 flex items-end gap-0.5 overflow-x-auto -mb-px" aria-label="โมดูลรายงาน">
             {REPORT_MODULES.map((item) => {
               const isActive = item.key === active;
               return (
                 <Link
                   key={item.key}
                   href={item.href}
-                  className={`shrink-0 px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
+                  className={`shrink-0 px-3.5 sm:px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${
                     isActive
                       ? 'border-[#7dcdc0] text-white'
-                      : 'border-transparent text-white/60 hover:text-white hover:border-white/30'
+                      : 'border-transparent text-white/55 hover:text-white hover:border-white/25'
                   }`}
                   style={{ fontFamily: 'var(--font-sarabun)' }}
                 >
@@ -83,19 +77,34 @@ export default function ReportModuleShell({
                 </Link>
               );
             })}
+            <Link
+              href="/"
+              className="ml-auto shrink-0 px-3 py-2.5 text-sm font-semibold text-white/55 hover:text-white border-b-2 border-transparent"
+            >
+              หน้าหลัก
+            </Link>
           </nav>
         </div>
       </header>
 
-      <div className="relative z-[1] max-w-[1400px] mx-auto px-4 py-6 flex gap-4 items-start">
+      <div className="relative z-[1] max-w-[1440px] mx-auto px-4 sm:px-5 py-5 sm:py-6 flex gap-4 items-start">
         {sidebar && (
-          <aside className="w-64 shrink-0 bg-white rounded-xl border border-[#d8e0e5] p-3 sticky top-28 hidden md:block">
-            {sidebar}
+          <aside className="w-[15.5rem] shrink-0 sticky top-[7.25rem] hidden md:block">
+            <div className="report-panel">
+              <div className="report-panel__head">
+                <h3 className="report-panel__title" style={{ fontSize: '0.85rem' }}>
+                  เมนู
+                </h3>
+              </div>
+              <div className="report-panel__body !pt-2">{sidebar}</div>
+            </div>
           </aside>
         )}
         <main className="flex-1 min-w-0 space-y-4">
           {sidebar && (
-            <div className="md:hidden bg-white rounded-xl border border-[#d8e0e5] p-2">{sidebar}</div>
+            <div className="md:hidden report-panel">
+              <div className="report-panel__body !py-2">{sidebar}</div>
+            </div>
           )}
           {children}
         </main>

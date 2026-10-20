@@ -1,4 +1,4 @@
-export type ReportModuleKey = 'ssop' | 'icd10' | 'aipn' | 'chronic' | 'eclaim';
+export type ReportModuleKey = 'authen' | 'ssop' | 'icd10' | 'aipn' | 'chronic' | 'eclaim';
 
 export interface ReportModule {
   key: ReportModuleKey;
@@ -43,5 +43,12 @@ export const REPORT_MODULES: ReportModule[] = [
     label: 'E-claim',
     shortLabel: 'E-claim',
     description: 'STM / พึงรับ-พึงจ่าย จากโฟลเดอร์งวด เช่น 202609',
+  },
+  {
+    key: 'authen',
+    href: '/authen-report',
+    label: 'ยืนยันตน',
+    shortLabel: 'ยืนยันตน',
+    description: 'ชุดข้อมูลการยืนยันตัวตนจาก authen_code',
   },
 ];

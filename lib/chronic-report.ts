@@ -1,5 +1,6 @@
 import { getDB } from '@/lib/database';
 import { ensureChronicTables } from '@/lib/chronic-import';
+import { hospitalLabel, loadHospitalDirectory } from '@/lib/hospital-names';
 import {
   THAI_MONTHS_SHORT,
   type ChronicNamedCount,
@@ -124,6 +125,8 @@ export async function fetchChronicReport(year?: number): Promise<ChronicReportDa
       if (monthMap.has(month)) monthMap.set(month, Number(row.count || 0));
     }
 
+    const hospitalMap = await loadHospitalDirectory(db);
+
     const [facilityRows]: any[] = await db.query(
       `
       SELECT COALESCE(NULLIF(hcode, ''), hproc) AS name, COUNT(*) AS count
@@ -173,7 +176,7 @@ export async function fetchChronicReport(year?: number): Promise<ChronicReportDa
       })),
       topFacilities: toNamedCounts(
         (facilityRows || []).map((row: any) => ({
-          name: String(row.name || ''),
+          name: hospitalLabel(hospitalMap, row.name),
           count: Number(row.count || 0),
         }))
       ),

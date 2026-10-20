@@ -1,5 +1,6 @@
 import { getDB } from '@/lib/database';
 import { parseDateParam } from '@/lib/auth-date-range';
+import { hospitalName, loadHospitalDirectory } from '@/lib/hospital-names';
 
 export const WITH_CARD_AUTH_TYPES = ['Auth_hospital', 'Auth_hosxp', 'Auth_OnSmartCard'] as const;
 export const NO_CARD_AUTH_TYPES = ['Auth_card', 'Auth_manual', 'Auth_NoSmartCard', 'NoSmartcard'] as const;
@@ -114,25 +115,7 @@ export async function fetchAuthVerificationStatsByFacility(options?: {
       [...WITH_CARD_AUTH_TYPES, ...params]
     );
 
-    const [nameRows]: any[] = await db.query(
-      `
-      SELECT user_sks AS hcode, hosname AS facility_name
-      FROM login_sks
-      UNION
-      SELECT username AS hcode, hospital_name AS facility_name
-      FROM sso_user
-      WHERE status = 'active' AND username IS NOT NULL AND username != ''
-      `
-    );
-
-    const nameMap = new Map<string, string>();
-    for (const row of nameRows || []) {
-      const hcode = String(row.hcode ?? '').trim();
-      const facilityName = String(row.facility_name ?? '').trim();
-      if (hcode && facilityName && !nameMap.has(hcode)) {
-        nameMap.set(hcode, facilityName);
-      }
-    }
+    const hospitalMap = await loadHospitalDirectory(db);
 
     const map = new Map<string, AuthVerificationFacilityStats>();
 
@@ -142,7 +125,7 @@ export async function fetchAuthVerificationStatsByFacility(options?: {
           dateFrom,
           dateTo,
           hcode,
-          facility_name: nameMap.get(hcode) || hcode,
+          facility_name: hospitalName(hospitalMap, hcode, hcode),
           total: 0,
           with_card: 0,
           no_card: 0,

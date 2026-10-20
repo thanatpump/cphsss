@@ -1,4 +1,5 @@
 import { getDB } from '@/lib/database';
+import { hospitalName, loadHospitalDirectory } from '@/lib/hospital-names';
 import {
   THAI_MONTHS_SHORT,
   type AipnFacilityRow,
@@ -93,12 +94,7 @@ export async function fetchAipnReport(year?: number): Promise<AipnReportData> {
 
     const placeholders = periodsForYear.map(() => '?').join(',');
 
-    const [nameRows]: any[] = await db.query('SELECT user_sks, hosname FROM login_sks');
-    const nameMap = new Map<string, string>();
-    for (const row of nameRows || []) {
-      const hcode = String(row.user_sks ?? '').trim();
-      if (hcode) nameMap.set(hcode, String(row.hosname ?? '').trim() || hcode);
-    }
+    const hospitalMap = await loadHospitalDirectory(db);
 
     const [stmmKpi]: any[] = await db.query(
       `
@@ -164,7 +160,7 @@ export async function fetchAipnReport(year?: number): Promise<AipnReportData> {
         const hcode = String(row.hcode || '');
         return {
           hcode,
-          name: nameMap.get(hcode) || hcode,
+          name: hospitalName(hospitalMap, hcode, hcode),
           visits: Number(row.visits || 0),
           amount: Number(row.amount || 0),
           adjrw: Number(row.adjrw || 0),

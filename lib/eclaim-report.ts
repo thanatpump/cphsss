@@ -1,5 +1,6 @@
 import { getDB } from '@/lib/database';
 import { ensureEclaimTables } from '@/lib/eclaim-import';
+import { hospitalLabel, hospitalName, loadHospitalDirectory } from '@/lib/hospital-names';
 import type { EclaimNamedCount, EclaimReportData } from '@/lib/eclaim-types';
 
 function toNamedCounts(rows: Array<{ name: string; count: number; amount: number }>): EclaimNamedCount[] {
@@ -43,12 +44,7 @@ export async function fetchEclaimReport(year?: number): Promise<EclaimReportData
       year && years.includes(year) ? year : years[0] ?? new Date().getFullYear();
     const periodPrefix = String(selectedYear);
 
-    const [nameRows]: any[] = await db.query('SELECT user_sks, hosname FROM login_sks');
-    const nameMap = new Map<string, string>();
-    for (const row of nameRows || []) {
-      const hcode = String(row.user_sks ?? '').trim();
-      if (hcode) nameMap.set(hcode, String(row.hosname ?? '').trim() || hcode);
-    }
+    const hospitalMap = await loadHospitalDirectory(db);
 
     const [stmKpi]: any[] = await db.query(
       `
@@ -170,30 +166,34 @@ export async function fetchEclaimReport(year?: number): Promise<EclaimReportData
         (facilityRows || []).map((row: any) => {
           const code = String(row.name || '');
           return {
-            name: nameMap.get(code) ? `${code} ${nameMap.get(code)}` : code,
+            name: hospitalLabel(hospitalMap, code),
             count: Number(row.count || 0),
             amount: Number(row.amount || 0),
           };
         })
       ),
       byPayFacility: toNamedCounts(
-        (payFacilityRows || []).map((row: any) => ({
-          name: String(row.name || ''),
-          count: Number(row.count || 0),
-          amount: Number(row.amount || 0),
-        }))
+        (payFacilityRows || []).map((row: any) => {
+          const raw = String(row.name || '');
+          const lookedUp = hospitalName(hospitalMap, raw, '');
+          return {
+            name: lookedUp ? hospitalLabel(hospitalMap, raw) : raw,
+            count: Number(row.count || 0),
+            amount: Number(row.amount || 0),
+          };
+        })
       ),
       topClaims: (topClaims || []).map((row: any) => ({
         rep: String(row.rep || ''),
         hn: String(row.hn || ''),
         name: String(row.name || ''),
-        hcode: String(row.hcode || ''),
+        hcode: hospitalLabel(hospitalMap, row.hcode),
         receiveTotal: Number(row.receive_total || 0),
         claimAmt: Number(row.claim_amt || 0),
       })),
       summaryRows: (summaryRows || []).map((row: any) => ({
         repNo: String(row.rep_no || ''),
-        hcode: String(row.hcode || ''),
+        hcode: hospitalLabel(hospitalMap, row.hcode),
         totalCases: Number(row.total_cases || 0),
         passCases: Number(row.pass_cases || 0),
         failCases: Number(row.fail_cases || 0),

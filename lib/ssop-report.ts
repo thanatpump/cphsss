@@ -1,4 +1,5 @@
 import { getDB } from '@/lib/database';
+import { hospitalAmp, hospitalName, loadHospitalDirectory } from '@/lib/hospital-names';
 import {
   THAI_MONTHS,
   type FacilityMonthRow,
@@ -15,7 +16,17 @@ function facilityType(name: string) {
   return 'อื่นๆ';
 }
 
-function matchDistrict(hosname: string, amphoeNames: string[]) {
+function matchDistrict(hosname: string, amphoeNames: string[], ampFromDb = '') {
+  const fromDb = String(ampFromDb || '').trim();
+  if (fromDb) {
+    const normalized = fromDb.startsWith('อำเภอ') ? fromDb : `อำเภอ${fromDb}`;
+    const hit = amphoeNames.find((name) => {
+      const a = name.replace(/^อำเภอ/, '').replace(/\s+/g, '');
+      const b = normalized.replace(/^อำเภอ/, '').replace(/\s+/g, '');
+      return a === b || name === fromDb || name === normalized;
+    });
+    return hit || normalized;
+  }
   const hay = hosname.replace(/\s+/g, '');
   for (const full of amphoeNames) {
     const token = full.replace(/^อำเภอ/, '').replace(/\s+/g, '');
@@ -24,14 +35,17 @@ function matchDistrict(hosname: string, amphoeNames: string[]) {
   return 'ไม่ระบุอำเภอ';
 }
 
-function toNamedCounts(rows: Array<{ name: string; count: number; amount: number }>): NamedCount[] {
+function toNamedCounts(
+  rows: Array<{ name: string; count: number; amount: number }>,
+  options?: { preserveOrder?: boolean }
+): NamedCount[] {
   const total = rows.reduce((sum, row) => sum + row.count, 0) || 1;
-  return rows
-    .map((row) => ({
-      ...row,
-      percent: Math.round((row.count / total) * 1000) / 10,
-    }))
-    .sort((a, b) => b.count - a.count);
+  const mapped = rows.map((row) => ({
+    ...row,
+    percent: Math.round((row.count / total) * 1000) / 10,
+  }));
+  if (options?.preserveOrder) return mapped;
+  return mapped.sort((a, b) => b.count - a.count);
 }
 
 function buddhistPeriodYear(period: string) {
@@ -53,18 +67,16 @@ export async function fetchSsopReport(year?: number): Promise<SsopReportData> {
 
     const selectedYear = year && years.includes(year) ? year : years[0] || new Date().getFullYear();
 
-    const [nameRows]: any[] = await db.query('SELECT user_sks, hosname FROM login_sks');
-    const nameMap = new Map<string, string>();
-    for (const row of nameRows || []) {
-      const hcode = String(row.user_sks ?? '').trim();
-      if (hcode) nameMap.set(hcode, String(row.hosname ?? '').trim() || hcode);
-    }
+    const hospitalMap = await loadHospitalDirectory(db);
 
     const [ampRows]: any[] = await db.query('SELECT name FROM amppart WHERE name IS NOT NULL');
-    const amphoeNames = (ampRows || [])
+    const amphoeNamesAll = (ampRows || [])
       .map((row: any) => String(row.name ?? '').trim())
-      .filter(Boolean)
-      .sort((a: string, b: string) => b.length - a.length);
+      .filter(Boolean);
+    // ใช้เรียงตามความยาวตอนจับชื่อ (กัน คอนสาร ชน คอนสวรรค์ ฯลฯ)
+    const amphoeNames = [...amphoeNamesAll].sort((a: string, b: string) => b.length - a.length);
+    // ลำดับแสดงผลตามชื่อใน amppart
+    const amphoeDisplayOrder = [...amphoeNamesAll].sort((a, b) => a.localeCompare(b, 'th'));
 
     const [opdRows]: any[] = await db.query(
       `
@@ -105,8 +117,8 @@ export async function fetchSsopReport(year?: number): Promise<SsopReportData> {
       const month = Number(row.month);
       const visits = Number(row.visits ?? 0);
       const amount = Number(row.amount ?? 0);
-      const name = nameMap.get(hcode) || hcode;
-      const district = matchDistrict(name, amphoeNames);
+      const name = hospitalName(hospitalMap, hcode, hcode);
+      const district = matchDistrict(name, amphoeNames, hospitalAmp(hospitalMap, hcode));
       const type = facilityType(name);
 
       const key = `${hcode}-${month}`;
@@ -155,18 +167,29 @@ export async function fetchSsopReport(year?: number): Promise<SsopReportData> {
 
     const byMonth = Array.from({ length: 12 }, (_, idx) => {
       const month = idx + 1;
-      const districts = districtMonth[month] || {};
+      const raw = districtMonth[month] || {};
+      // ซ่อนกลุ่มนอกจังหวัด / จับอำเภอไม่ได้ ออกจากกราฟแยกอำเภอชั่วคราว
+      const districts = Object.fromEntries(
+        Object.entries(raw).filter(([name]) => name !== 'ไม่ระบุอำเภอ')
+      );
       const total = Object.values(districts).reduce((sum, value) => sum + value, 0);
       return { month, label: THAI_MONTHS[month], districts, total };
     });
 
-    const byDistrict = toNamedCounts(
-      [...districtTotals.entries()].map(([name, value]) => ({
-        name,
-        count: value.count,
-        amount: value.amount,
-      }))
-    );
+    // โชว์ครบทุกอำเภอใน amppart (แม้เป็น 0) — ซ่อน「ไม่ระบุอำเภอ」ไว้ก่อน
+    const districtRows: Array<{ name: string; count: number; amount: number }> = [];
+    const seenDistrict = new Set<string>();
+    for (const name of amphoeDisplayOrder) {
+      const value = districtTotals.get(name) || { count: 0, amount: 0 };
+      districtRows.push({ name, count: value.count, amount: value.amount });
+      seenDistrict.add(name);
+    }
+    for (const [name, value] of districtTotals.entries()) {
+      if (seenDistrict.has(name) || name === 'ไม่ระบุอำเภอ') continue;
+      districtRows.push({ name, count: value.count, amount: value.amount });
+      seenDistrict.add(name);
+    }
+    const byDistrict = toNamedCounts(districtRows, { preserveOrder: true });
     const byFacilityType = toNamedCounts(
       [...typeTotals.entries()].map(([name, value]) => ({
         name,
@@ -185,8 +208,8 @@ export async function fetchSsopReport(year?: number): Promise<SsopReportData> {
       if (!parsed || parsed.year !== selectedYear) continue;
       const hcode = String(row.hcode ?? '').trim();
       if (!hcode) continue;
-      const name = nameMap.get(hcode) || hcode;
-      const district = matchDistrict(name, amphoeNames);
+      const name = hospitalName(hospitalMap, hcode, hcode);
+      const district = matchDistrict(name, amphoeNames, hospitalAmp(hospitalMap, hcode));
       const type = facilityType(name);
       const visits = Number(row.visits ?? 0);
       const amount = Number(row.amount ?? 0);

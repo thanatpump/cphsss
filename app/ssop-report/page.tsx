@@ -6,6 +6,19 @@ import SsopEChart from '@/app/components/SsopEChart';
 import SsopDataUploadPanel from '@/app/components/SsopDataUploadPanel';
 import ReportModuleShell from '@/app/components/ReportModuleShell';
 import {
+  ReportActionButton,
+  ReportAlert,
+  ReportEmpty,
+  ReportKpi,
+  ReportLoading,
+  ReportMeta,
+  ReportPageHeader,
+  ReportPanel,
+  ReportSidebarNav,
+  ReportTable,
+  ReportYearSelect,
+} from '@/app/components/ReportUi';
+import {
   DISTRICT_COLORS,
   SSOP_PAGES,
   type SsopPageKey,
@@ -18,10 +31,6 @@ function formatInt(value: number) {
 
 function formatMoney(value: number) {
   return value.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function buddhistYear(year: number) {
-  return year + 543;
 }
 
 export default function SsopReportPage() {
@@ -86,10 +95,7 @@ export default function SsopReportPage() {
     XLSX.writeFile(workbook, `ssop-report-${data.year}.xlsx`);
   };
 
-  const districtNames = useMemo(
-    () => data?.byDistrict.map((row) => row.name) || [],
-    [data]
-  );
+  const districtNames = useMemo(() => data?.byDistrict.map((row) => row.name) || [], [data]);
 
   const pieOption = useMemo(
     () => ({
@@ -98,9 +104,10 @@ export default function SsopReportPage() {
       series: [
         {
           type: 'pie',
-          radius: ['18%', '68%'],
+          radius: ['28%', '68%'],
           data: (data?.byDistrict || []).map((row) => ({ name: row.name, value: row.count })),
-          label: { formatter: '{b}\n{d}%', fontSize: 10 },
+          label: { formatter: '{b}\n{d}%', fontSize: 11, color: '#3d4f5a' },
+          itemStyle: { borderColor: '#fff', borderWidth: 2 },
         },
       ],
     }),
@@ -113,8 +120,12 @@ export default function SsopReportPage() {
       legend: { type: 'scroll', bottom: 0 },
       color: DISTRICT_COLORS,
       grid: { left: 48, right: 16, top: 24, bottom: 64 },
-      xAxis: { type: 'category', data: data?.byMonth.map((row) => row.label) || [] },
-      yAxis: { type: 'value' },
+      xAxis: {
+        type: 'category',
+        data: data?.byMonth.map((row) => row.label) || [],
+        axisLine: { lineStyle: { color: '#d8e0e5' } },
+      },
+      yAxis: { type: 'value', splitLine: { lineStyle: { color: '#eef2f4' } } },
       series: districtNames.map((name) => ({
         name,
         type: 'bar',
@@ -130,21 +141,29 @@ export default function SsopReportPage() {
     () => ({
       tooltip: { trigger: 'axis' },
       grid: { left: 48, right: 16, top: 24, bottom: 32 },
-      xAxis: { type: 'category', data: data?.byFacilityType.map((row) => row.name) || [] },
-      yAxis: { type: 'value' },
+      xAxis: {
+        type: 'category',
+        data: data?.byFacilityType.map((row) => row.name) || [],
+        axisLine: { lineStyle: { color: '#d8e0e5' } },
+      },
+      yAxis: { type: 'value', splitLine: { lineStyle: { color: '#eef2f4' } } },
       series: [
         {
           type: 'bar',
           data: data?.byFacilityType.map((row) => row.count) || [],
-          itemStyle: { color: '#60a5fa' },
+          itemStyle: { color: '#1a7a6d', borderRadius: [4, 4, 0, 0] },
+          barMaxWidth: 48,
         },
       ],
     }),
     [data]
   );
 
-  const topDistricts = data?.byDistrict.slice(0, 10) || [];
-  const bottomDistricts = [...(data?.byDistrict || [])].reverse().slice(0, 10);
+  const districtsByCount = [...(data?.byDistrict || [])]
+    .filter((row) => row.name !== 'ไม่ระบุอำเภอ')
+    .sort((a, b) => b.count - a.count);
+  const topDistricts = districtsByCount.slice(0, 10);
+  const bottomDistricts = [...districtsByCount].reverse().slice(0, 10);
   const hasDashboard = Boolean(data && data.kpis.patients > 0);
   const showReportChrome = page !== 'data' || hasDashboard;
 
@@ -157,143 +176,93 @@ export default function SsopReportPage() {
     });
   }, [loadDb]);
 
-  const sidebar = (
-    <>
-      {SSOP_PAGES.map((item) => (
-        <button
-          key={item.key}
-          type="button"
-          onClick={() => setPage(item.key)}
-          className={`w-full text-left px-4 py-3 rounded-lg text-sm font-semibold mb-1 ${
-            page === item.key ? 'bg-[#e8f4f2] text-[#0b3d4a]' : 'text-gray-700 hover:bg-gray-50'
-          }`}
-        >
-          {item.label}
-        </button>
-      ))}
-    </>
-  );
-
   return (
     <ReportModuleShell
       active="ssop"
       title="แดชบอร์ด SSOP"
       subtitle="รายงานผลการส่งข้อมูลผู้ป่วยนอกสิทธิประกันสังคม"
-      sidebar={sidebar}
+      sidebar={<ReportSidebarNav items={SSOP_PAGES} active={page} onChange={setPage} />}
       actions={
         showReportChrome ? (
           <>
-            <button
-              type="button"
-              onClick={download}
-              className="px-3 py-2 rounded-lg bg-gray-100 text-sm font-semibold hover:bg-gray-200"
-            >
-              ดาวน์โหลด
-            </button>
-            <button
-              type="button"
-              onClick={() => loadDb(typeof year === 'number' ? year : undefined)}
-              className="px-3 py-2 rounded-lg bg-gray-100 text-sm font-semibold hover:bg-gray-200"
-            >
+            <ReportActionButton onClick={download}>ดาวน์โหลด</ReportActionButton>
+            <ReportActionButton onClick={() => loadDb(typeof year === 'number' ? year : undefined)}>
               รีเฟรช
-            </button>
+            </ReportActionButton>
           </>
         ) : null
       }
     >
-          {page === 'data' && <SsopDataUploadPanel onImported={handleImported} />}
+      {page === 'data' && <SsopDataUploadPanel onImported={handleImported} />}
 
-          {(page !== 'data' || hasDashboard) && (
+      {(page !== 'data' || hasDashboard) && (
+        <>
+          <ReportPageHeader
+            id="ssop-dashboard"
+            title={
+              page === 'data'
+                ? 'ภาพรวมข้อมูลหลังอัปโหลด'
+                : 'รายงานผลการส่งข้อมูลผู้ป่วยนอก สิทธิประกันสังคม'
+            }
+            description="ข้อมูลจากไฟล์ SSOP ที่อัปโหลดในระบบ (SOGNSTMM / SOGNSTMP)"
+            controls={
+              <ReportYearSelect
+                year={year}
+                years={data?.years || []}
+                onChange={(next) => {
+                  setYear(next);
+                  loadDb(next);
+                }}
+              />
+            }
+            kpis={
+              <>
+                <ReportKpi label="จำนวนคนไข้ทั้งหมด" value={formatInt(data?.kpis.patients || 0)} />
+                <ReportKpi label="จำนวนเงินเฉลี่ย" value={formatMoney(data?.kpis.avgAmount || 0)} />
+                <ReportKpi label="จำนวนหน่วยบริการ" value={formatInt(data?.kpis.facilities || 0)} />
+              </>
+            }
+          />
+
+          {error && <ReportAlert>{error}</ReportAlert>}
+          {loading ? (
+            <ReportLoading />
+          ) : !data ? null : (
             <>
-              <div id="ssop-dashboard" className="bg-white rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h2 className="text-xl font-bold">
-                    {page === 'data'
-                      ? 'ภาพรวมข้อมูลหลังอัปโหลด'
-                      : 'รายงานผลการส่งข้อมูลผู้ป่วยนอก สิทธิประกันสังคม'}
-                  </h2>
-                  <p className="text-xs text-gray-500 mt-1">
-                    ข้อมูลจากไฟล์ SSOP ที่อัปโหลดในระบบ (SOGNSTMM / SOGNSTMP)
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <label className="text-sm font-semibold">
-                    ปี {year ? buddhistYear(Number(year)) : '-'}
-                    <select
-                      className="ml-2 border rounded-lg px-2 py-1"
-                      value={year}
-                      onChange={(e) => {
-                        const next = Number(e.target.value);
-                        setYear(next);
-                        loadDb(next);
-                      }}
-                    >
-                      {(data?.years || []).map((item) => (
-                        <option key={item} value={item}>
-                          {buddhistYear(item)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <div className="rounded-lg bg-amber-50 px-3 py-2 text-center">
-                    <p className="text-[11px] text-gray-600">จำนวนคนไข้ทั้งหมด</p>
-                    <p className="text-xl font-bold">{formatInt(data?.kpis.patients || 0)}</p>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 px-3 py-2 text-center">
-                    <p className="text-[11px] text-gray-600">จำนวนเงินเฉลี่ย</p>
-                    <p className="text-xl font-bold">{formatMoney(data?.kpis.avgAmount || 0)}</p>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 px-3 py-2 text-center">
-                    <p className="text-[11px] text-gray-600">จำนวนหน่วยบริการ</p>
-                    <p className="text-xl font-bold">{formatInt(data?.kpis.facilities || 0)}</p>
-                  </div>
-                </div>
-              </div>
-
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3">{error}</div>
-              )}
-              {loading ? (
-                <div className="bg-white rounded-xl p-12 text-center text-gray-500">กำลังโหลดรายงาน...</div>
-              ) : !data ? null : (
+              {(page === 'overview' || page === 'data') && (
                 <>
-                  {(page === 'overview' || page === 'data') && (
-                    <>
-                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                        <section className="bg-white rounded-xl p-4">
-                          <h3 className="font-bold mb-2">สัดส่วนที่ส่งข้อมูลแยกอำเภอ</h3>
-                          <SsopEChart option={pieOption} height={360} />
-                        </section>
-                        <section className="bg-white rounded-xl p-4">
-                          <h3 className="font-bold mb-2">จำนวนที่ส่งข้อมูลแยกเดือน</h3>
-                          <SsopEChart option={monthOption} height={360} />
-                        </section>
-                      </div>
-                      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                        <RankTable title="ส่งข้อมูลสูงสุด" rows={topDistricts} />
-                        <RankTable title="ส่งข้อมูลต่ำสุด" rows={bottomDistricts} />
-                      </div>
-                      <section className="bg-white rounded-xl p-4">
-                        <h3 className="font-bold mb-2">จำนวนส่งข้อมูลแยกประเภทหน่วยบริการ</h3>
-                        <SsopEChart option={typeOption} height={280} />
-                      </section>
-                    </>
-                  )}
-
-                  {page === 'district' && <RankTable title="สรุปแยกอำเภอ" rows={data.byDistrict} showAmount />}
-                  {page === 'facility' && <FacilityTable rows={data.facilities} />}
-                  {page === 'facility-month' && <FacilityMonthTable rows={data.facilityMonths} />}
+                  <div className="report-grid-2">
+                    <ReportPanel title="สัดส่วนที่ส่งข้อมูลแยกอำเภอ">
+                      <SsopEChart option={pieOption} height={360} />
+                    </ReportPanel>
+                    <ReportPanel title="จำนวนที่ส่งข้อมูลแยกเดือน">
+                      <SsopEChart option={monthOption} height={360} />
+                    </ReportPanel>
+                  </div>
+                  <div className="report-grid-2">
+                    <RankTable title="ส่งข้อมูลสูงสุด" rows={topDistricts} />
+                    <RankTable title="ส่งข้อมูลต่ำสุด" rows={bottomDistricts} />
+                  </div>
+                  <ReportPanel title="จำนวนส่งข้อมูลแยกประเภทหน่วยบริการ">
+                    <SsopEChart option={typeOption} height={280} />
+                  </ReportPanel>
                 </>
               )}
 
-              <p className="text-xs text-gray-500 text-right">
-                วันที่อัปเดตข้อมูลล่าสุด:{' '}
-                {data?.updatedAt
-                  ? new Date(data.updatedAt).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
-                  : '-'}
-              </p>
+              {page === 'district' && <RankTable title="สรุปแยกอำเภอ" rows={data.byDistrict} showAmount />}
+              {page === 'facility' && <FacilityTable rows={data.facilities} />}
+              {page === 'facility-month' && <FacilityMonthTable rows={data.facilityMonths} />}
             </>
           )}
+
+          <ReportMeta>
+            วันที่อัปเดตข้อมูลล่าสุด:{' '}
+            {data?.updatedAt
+              ? new Date(data.updatedAt).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })
+              : '-'}
+          </ReportMeta>
+        </>
+      )}
     </ReportModuleShell>
   );
 }
@@ -308,12 +277,11 @@ function RankTable({
   showAmount?: boolean;
 }) {
   return (
-    <section className="bg-white rounded-xl p-4 overflow-auto">
-      <h3 className="font-bold mb-3">{title}</h3>
-      <table className="min-w-full text-sm">
+    <ReportPanel title={title}>
+      <ReportTable>
         <thead>
-          <tr className="text-left text-gray-600 border-b">
-            <th className="py-2">#</th>
+          <tr>
+            <th>#</th>
             <th>อำเภอ</th>
             <th className="text-right">จำนวน</th>
             <th className="text-right">ร้อยละ</th>
@@ -322,30 +290,32 @@ function RankTable({
         </thead>
         <tbody>
           {rows.map((row, idx) => (
-            <tr key={row.name} className="border-b">
-              <td className="py-2">{idx + 1}</td>
+            <tr key={row.name}>
+              <td>{idx + 1}</td>
               <td>{row.name}</td>
-              <td className="text-right">{formatInt(row.count)}</td>
-              <td className="text-right">{row.percent.toFixed(1)}</td>
-              {showAmount && <td className="text-right">{formatMoney(row.amount)}</td>}
+              <td className="text-right tabular-nums">{formatInt(row.count)}</td>
+              <td className="text-right tabular-nums">{row.percent.toFixed(1)}</td>
+              {showAmount && (
+                <td className="text-right tabular-nums">{formatMoney(row.amount)}</td>
+              )}
             </tr>
           ))}
         </tbody>
-      </table>
-    </section>
+      </ReportTable>
+    </ReportPanel>
   );
 }
 
 function FacilityTable({ rows, empty }: { rows: SsopReportData['facilities']; empty?: string }) {
   if (!rows.length) {
-    return <section className="bg-white rounded-xl p-8 text-center text-gray-500">{empty || 'ไม่พบข้อมูล'}</section>;
+    return <ReportEmpty>{empty || 'ไม่พบข้อมูล'}</ReportEmpty>;
   }
   return (
-    <section className="bg-white rounded-xl p-4 overflow-auto">
-      <table className="min-w-full text-sm">
+    <ReportPanel title="แยกหน่วยบริการ">
+      <ReportTable>
         <thead>
-          <tr className="text-left text-gray-600 border-b">
-            <th className="py-2">รหัส</th>
+          <tr>
+            <th>รหัส</th>
             <th>หน่วยบริการ</th>
             <th>อำเภอ</th>
             <th>ประเภท</th>
@@ -355,28 +325,28 @@ function FacilityTable({ rows, empty }: { rows: SsopReportData['facilities']; em
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.hcode} className="border-b">
-              <td className="py-2">{row.hcode}</td>
+            <tr key={row.hcode}>
+              <td>{row.hcode}</td>
               <td>{row.name}</td>
               <td>{row.district}</td>
               <td>{row.type}</td>
-              <td className="text-right">{formatInt(row.visits)}</td>
-              <td className="text-right">{formatMoney(row.amount)}</td>
+              <td className="text-right tabular-nums">{formatInt(row.visits)}</td>
+              <td className="text-right tabular-nums">{formatMoney(row.amount)}</td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </section>
+      </ReportTable>
+    </ReportPanel>
   );
 }
 
 function FacilityMonthTable({ rows }: { rows: SsopReportData['facilityMonths'] }) {
   return (
-    <section className="bg-white rounded-xl p-4 overflow-auto">
-      <table className="min-w-full text-sm">
+    <ReportPanel title="แยกหน่วยบริการรายเดือน">
+      <ReportTable>
         <thead>
-          <tr className="text-left text-gray-600 border-b">
-            <th className="py-2">เดือน</th>
+          <tr>
+            <th>เดือน</th>
             <th>รหัส</th>
             <th>หน่วยบริการ</th>
             <th>อำเภอ</th>
@@ -386,17 +356,17 @@ function FacilityMonthTable({ rows }: { rows: SsopReportData['facilityMonths'] }
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={`${row.hcode}-${row.month}`} className="border-b">
-              <td className="py-2">{row.monthLabel}</td>
+            <tr key={`${row.hcode}-${row.month}`}>
+              <td>{row.monthLabel}</td>
               <td>{row.hcode}</td>
               <td>{row.name}</td>
               <td>{row.district}</td>
-              <td className="text-right">{formatInt(row.visits)}</td>
-              <td className="text-right">{formatMoney(row.amount)}</td>
+              <td className="text-right tabular-nums">{formatInt(row.visits)}</td>
+              <td className="text-right tabular-nums">{formatMoney(row.amount)}</td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </section>
+      </ReportTable>
+    </ReportPanel>
   );
 }
