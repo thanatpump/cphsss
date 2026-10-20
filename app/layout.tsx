@@ -1,21 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Sans_Thai, Sarabun } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./contexts/AuthContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const sarabun = Sarabun({
+  variable: "--font-sarabun",
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const ibmPlex = IBM_Plex_Sans_Thai({
+  variable: "--font-ibm-plex",
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "ระบบจัดการข้อมูล SSO",
-  description: "ระบบจัดการข้อมูล SSO สำหรับจัดการข้อมูล SIGNSTMM, SIGNSTMS, SOGNSTMM, และ SOGNSTMP",
+  title: "ระบบจัดสรรเงินประกันสังคม จังหวัดชัยภูมิ",
+  description: "ระบบจัดการข้อมูล SSO สำหรับจัดสรรเงินประกันสังคมและติดตามการยืนยันตัวตน",
 };
 
 export default function RootLayout({
@@ -24,13 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className="light" style={{ colorScheme: 'light' }}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+    <html lang="th" className="light" style={{ colorScheme: "light" }}>
+      <body className={`${sarabun.variable} ${ibmPlex.variable} antialiased`}>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

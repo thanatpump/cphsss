@@ -183,7 +183,7 @@ export default function DataPage() {
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a7a6d]"
                 />
               </div>
               <div>
@@ -194,7 +194,7 @@ export default function DataPage() {
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1a7a6d]"
                 />
               </div>
               <div className="flex items-end">
@@ -216,7 +216,7 @@ export default function DataPage() {
             <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{formatNumber(pagination.totalItems)}</div>
+                  <div className="text-2xl font-bold text-[#1a7a6d]">{formatNumber(pagination.totalItems)}</div>
                   <div className="text-sm text-gray-600">จำนวนรายการทั้งหมด</div>
                 </div>
                 <div className="text-center">
@@ -224,7 +224,7 @@ export default function DataPage() {
                   <div className="text-sm text-gray-600">หน้าปัจจุบัน</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{formatNumber(pagination.totalPages)}</div>
+                  <div className="text-2xl font-bold text-[#1a7a6d]">{formatNumber(pagination.totalPages)}</div>
                   <div className="text-sm text-gray-600">จำนวนหน้าทั้งหมด</div>
                 </div>
                 <div className="text-center">
@@ -278,7 +278,7 @@ export default function DataPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => toggleRow(patient.id)}
-                          className="text-blue-600 hover:text-blue-800"
+                          className="text-[#1a7a6d] hover:text-[#0b3d4a]"
                         >
                           {expandedRows.has(patient.id) ? '▼' : '▶'}
                         </button>

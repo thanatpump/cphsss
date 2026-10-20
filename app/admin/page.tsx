@@ -103,9 +103,9 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 border-b-2 border-[#1a7a6d] mx-auto mb-4"></div>
           <p className="text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
@@ -113,32 +113,37 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen app-shell">
       {/* Header */}
-      <header className="bg-white shadow-md">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">⚙️</span>
+          <div className="flex justify-between items-center gap-3 py-3 sm:h-[4.25rem]">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 bg-[#1a7a6d] rounded-md flex items-center justify-center shrink-0">
+                <span className="text-white text-sm font-semibold tracking-[0.14em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">
+              <div className="min-w-0">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/55" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  Admin
+                </p>
+                <h1 className="text-base sm:text-lg font-semibold text-white truncate" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  Admin Dashboard
+                </h1>
+                <p className="text-xs text-white/65 truncate">
                   {user?.role === 'admin_server' ? 'ผู้ดูแลระบบหลัก' : `ผู้ดูแล ${user?.hospital_name}`}
                 </p>
               </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-2 shrink-0">
               <Link
                 href="/allocation-check/data"
-                className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+                className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors"
               >
-                กลับไปหน้าหลัก
+                กลับ
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
+                className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors"
               >
                 ออกจากระบบ
               </button>
@@ -151,13 +156,13 @@ export default function AdminDashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-[#1a7a6d]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-semibold uppercase">ผู้ใช้ทั้งหมด</p>
                 <p className="text-3xl font-bold text-gray-800 mt-2">{stats.totalUsers}</p>
               </div>
-              <div className="bg-blue-100 rounded-full p-4">
+              <div className="bg-[#e8f4f2] rounded-full p-4">
                 <span className="text-3xl">👥</span>
               </div>
             </div>
@@ -188,13 +193,13 @@ export default function AdminDashboardPage() {
           </div>
 
           {user?.role === 'admin_server' && (
-            <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-[#1a7a6d]">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-600 text-sm font-semibold uppercase">Admin รพสต</p>
                   <p className="text-3xl font-bold text-gray-800 mt-2">{stats.adminRps}</p>
                 </div>
-                <div className="bg-purple-100 rounded-full p-4">
+                <div className="bg-[#e8f4f2] rounded-full p-4">
                   <span className="text-3xl">👑</span>
                 </div>
               </div>
@@ -220,7 +225,7 @@ export default function AdminDashboardPage() {
                   id="hospital-filter"
                   value={selectedHospital}
                   onChange={(e) => handleHospitalChange(e.target.value)}
-                  className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 font-medium min-w-[200px]"
+                  className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] bg-white text-gray-900 font-medium min-w-[200px]"
                 >
                   <option value="all">ทั้งหมด</option>
                   {hospitals.map((hospital) => (
@@ -235,13 +240,13 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Link
               href="/admin/users"
-              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all shadow-md"
+              className="bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a] text-white p-6 rounded-lg hover:from-[#15685d] hover:to-[#072a33] transition-all shadow-md"
             >
               <div className="flex items-center">
                 <span className="text-4xl mr-4">👥</span>
                 <div>
                   <h3 className="text-xl font-bold">จัดการผู้ใช้</h3>
-                  <p className="text-blue-100">ดู แก้ไข ลบ ผู้ใช้</p>
+                  <p className="text-white/80">ดู แก้ไข ลบ ผู้ใช้</p>
                 </div>
               </div>
             </Link>
@@ -289,13 +294,13 @@ export default function AdminDashboardPage() {
 
                 <Link
                   href="/admin/users?filter=admin_rps"
-                  className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all shadow-md"
+                  className="bg-gradient-to-r from-[#15685d] to-[#0b3d4a] text-white p-6 rounded-lg hover:from-[#12574e] hover:to-[#072a33] transition-all shadow-md"
                 >
                   <div className="flex items-center">
                     <span className="text-4xl mr-4">👑</span>
                     <div>
                       <h3 className="text-xl font-bold">จัดการ Admin</h3>
-                      <p className="text-purple-100">ตั้งค่า Admin รพสต</p>
+                      <p className="text-white/80">ตั้งค่า Admin รพสต</p>
                     </div>
                   </div>
                 </Link>
@@ -303,13 +308,13 @@ export default function AdminDashboardPage() {
                 {String(user?.username || '').toLowerCase() === 'adminserver' && (
                   <Link
                     href="/admin/checks"
-                    className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-6 rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-md"
+                    className="bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a] text-white p-6 rounded-lg hover:from-[#15685d] hover:to-[#072a33] transition-all shadow-md"
                   >
                     <div className="flex items-center">
                       <span className="text-4xl mr-4">🗂️</span>
                       <div>
                         <h3 className="text-xl font-bold">รายการตรวจสอบ</h3>
-                        <p className="text-indigo-100">ดูข้อมูล ssop_image</p>
+                        <p className="text-white/80">ดูข้อมูล ssop_image</p>
                       </div>
                     </div>
                   </Link>

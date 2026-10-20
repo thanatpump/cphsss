@@ -1007,9 +1007,9 @@ export default function AllocationDataPage() {
 
   if (loading || !authenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen app-shell relative flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-yellow-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-[#1a7a6d] mx-auto"></div>
           <p className="mt-6 text-xl text-gray-700 font-semibold">กำลังโหลดข้อมูล...</p>
         </div>
       </div>
@@ -1017,29 +1017,30 @@ export default function AllocationDataPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen app-shell relative pb-10">
       {/* Header - ธีมทางการโรงพยาบาล */}
-      <div className="bg-slate-700 shadow-lg sticky top-0 z-50">
+      <div className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center py-5 gap-4">
             <div className="flex items-center gap-4">
-              <div className="bg-slate-600 rounded-lg p-3">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+              <div className="h-11 w-11 shrink-0 rounded-md bg-[#1a7a6d] flex items-center justify-center">
+                <span className="text-white text-sm font-semibold tracking-[0.14em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white">
-                  ระบบตรวจสอบสิทธิ์การรักษา
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/55" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  Social Security Office · Chaiyaphum
+                </p>
+                <h1 className="text-lg md:text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  ตรวจสอบจัดสรรเงิน
                 </h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
-                  <div className="flex items-center gap-2 bg-slate-600 rounded-lg px-3 py-1.5">
+                  <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-1.5">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                     </svg>
                     <span className="text-white text-sm font-semibold">{username}</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-slate-600 rounded-lg px-3 py-1.5">
+                  <div className="flex items-center gap-2 bg-white/10 rounded-lg px-3 py-1.5">
                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                     </svg>
@@ -1051,7 +1052,7 @@ export default function AllocationDataPage() {
             <div className="flex gap-2">
               <Link
                 href="/admin/report"
-                className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2"
+                className="bg-[#1a7a6d] hover:bg-[#15685d] text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
@@ -1061,7 +1062,7 @@ export default function AllocationDataPage() {
               {(userRole === 'admin_server' || userRole === 'admin_rps') && (
                 <Link
                   href="/admin"
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2"
+                  className="bg-[#072a33] hover:bg-[#051f26] text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
@@ -1089,7 +1090,7 @@ export default function AllocationDataPage() {
                     setErrorMessage('ไม่สามารถดาวน์โหลดไฟล์ได้: ' + (error instanceof Error ? error.message : 'Unknown error'));
                   }
                 }}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm"
+                className="bg-[#1a7a6d] hover:bg-[#15685d] text-white px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm"
                 title="ดาวน์โหลด ThaiIDCardReader.exe"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -1098,7 +1099,7 @@ export default function AllocationDataPage() {
                 <span className="hidden sm:inline">ดาวน์โหลด</span>
               </button>
               <Link href="/">
-                <button className="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2 text-sm">
+                <button className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 rounded-md font-semibold transition-all flex items-center gap-2 text-sm">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                   </svg>
@@ -1144,7 +1145,7 @@ export default function AllocationDataPage() {
                         <button
                           onClick={readCardFromReader}
                           disabled={isReadingCard || loadingRight}
-                          className="bg-slate-700 hover:bg-slate-600 text-white px-8 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                          className="bg-slate-700 hover:bg-white/10 text-white px-8 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                           {isReadingCard ? (
                             <>
@@ -1308,7 +1309,7 @@ export default function AllocationDataPage() {
                                   type="button"
                                   onClick={startCamera}
                                   disabled={uploadingProof || capturedPhotos.length >= 3}
-                                  className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                  className="w-full bg-slate-700 hover:bg-white/10 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   {capturedPhotos.length >= 3 ? 'ถ่ายครบ 3 รูปแล้ว' : 'เปิดกล้องเพื่อถ่ายรูป'}
                                 </button>
@@ -1328,7 +1329,7 @@ export default function AllocationDataPage() {
                                       type="button"
                                       onClick={handleCapturePhoto}
                                       disabled={uploadingProof || capturedPhotos.length >= 3}
-                                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                      className="bg-[#1a7a6d] hover:bg-[#15685d] text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                       ถ่ายรูป ({capturedPhotos.length}/3)
                                     </button>
@@ -1396,7 +1397,7 @@ export default function AllocationDataPage() {
                         <button
                           onClick={handleManualCheck}
                           disabled={manualCitizenId.length !== 13 || loadingRight || capturedPhotos.length < 3 || !selectedPhotoId || !manualHn.trim()}
-                          className="w-full bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          className="w-full bg-slate-700 hover:bg-white/10 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -1590,7 +1591,7 @@ export default function AllocationDataPage() {
         {rightData && !loadingRight && (
           <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
             {/* ส่วนที่ 1: ข้อมูลประชากร */}
-            <h2 className="text-xl font-bold text-blue-700 mb-6">
+            <h2 className="text-xl font-bold text-[#0b3d4a] mb-6">
               ข้อมูลประชากร ของ <span className="text-orange-500">สปสช.</span>
             </h2>
             
@@ -1645,14 +1646,14 @@ export default function AllocationDataPage() {
               
             {/* หัวข้อข้อมูลตรวจสอบสิทธิ ณ ปัจจุบัน */}
             <div className="mb-8 pt-4 border-t border-gray-200">
-              <h3 className="text-xl font-bold text-blue-700">
+              <h3 className="text-xl font-bold text-[#0b3d4a]">
                 ข้อมูลตรวจสอบสิทธิ ณ ปัจจุบัน
               </h3>
             </div>
 
             {/* ส่วนที่ 2: สิทธิใช้เบิก */}
             <div id="rights-section" className="pt-6 border-t border-gray-200">
-              <h2 className="text-xl font-bold text-blue-700 mb-6">สิทธิใช้เบิก</h2>
+              <h2 className="text-xl font-bold text-[#0b3d4a] mb-6">สิทธิใช้เบิก</h2>
               
               <div className="space-y-3 mb-6">
                 {/* Row 1 - สิทธิที่ใช้เบิก */}
@@ -1726,8 +1727,8 @@ export default function AllocationDataPage() {
                   saving || (!cardData && !rightData)
                     ? 'bg-gray-400 text-white cursor-not-allowed'
                     : saveSuccess
-                    ? 'bg-slate-700 text-white hover:bg-slate-600'
-                    : 'bg-slate-700 text-white hover:bg-slate-600'
+                    ? 'bg-slate-700 text-white hover:bg-white/10'
+                    : 'bg-slate-700 text-white hover:bg-white/10'
                 }`}
               >
                 {saving ? (

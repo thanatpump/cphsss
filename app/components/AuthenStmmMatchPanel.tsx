@@ -263,7 +263,7 @@ export default function AuthenStmmMatchPanel({
       ) : summary ? (
         <>
           <div className="p-6 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
-            <StatCard label="authen ทั้งหมด" value={summary.authenTotal} color="border-blue-500" />
+            <StatCard label="authen ทั้งหมด" value={summary.authenTotal} color="border-[#1a7a6d]" />
             <StatCard label="stmm ทั้งหมด" value={summary.stmmTotal} color="border-indigo-500" />
             <StatCard label="จับคู่ได้" value={summary.joinedTotal} color="border-teal-500" />
             <StatCard label="vm = invno" value={summary.vmInvnoMatch} color="border-green-500" />
@@ -498,7 +498,7 @@ function AuthenStmmCompareChart({
 
   return (
     <div className="px-6 pb-6">
-      <div className="rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-5">
+      <div className="rounded-xl border border-[#d8e0e5] bg-gradient-to-br from-[#e8f4f2] to-white p-5">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-5">
           <div>
             <h3 className="text-lg font-bold text-gray-900">เปรียบเทียบกับสถานบริการอื่น</h3>
@@ -514,7 +514,7 @@ function AuthenStmmCompareChart({
                 onClick={() => onMetricChange(item.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                   metric === item.id
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-[#1a7a6d] text-white'
                     : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -539,7 +539,7 @@ function AuthenStmmCompareChart({
               จาก {Math.max(comparison.total_facilities - (comparison.self ? 1 : 0), 0)} รหัส
             </p>
           </div>
-          <div className="rounded-lg bg-white border border-indigo-100 p-4">
+          <div className="rounded-lg bg-white border border-[#d8e0e5] p-4">
             <p className="text-xs font-semibold text-gray-600 uppercase">สรุป</p>
             <p className="text-sm text-gray-800 mt-2">
               {selfValue !== null && selfValue >= avgValue
@@ -617,7 +617,7 @@ function AuthenStmmCompareChart({
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-indigo-100 flex items-center gap-4 text-xs text-gray-600">
+        <div className="mt-4 pt-4 border-t border-[#d8e0e5] flex items-center gap-4 text-xs text-gray-600">
           <span className="inline-flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-teal-500" />
             ของฉัน

@@ -14,22 +14,22 @@ const BAR_CONFIG = [
     key: 'total' as const,
     label: 'ทั้งหมด',
     subtitle: 'รายการทั้งหมด',
-    color: 'bg-purple-500',
-    ring: 'ring-purple-300',
+    color: "bg-[#0b3d4a]",
+    ring: "ring-[#0b3d4a]",
   },
   {
     key: 'with_card' as const,
     label: 'ยืนยันตัวตน',
     subtitle: 'Auth_hospital · Auth_hosxp · Auth_OnSmartCard',
-    color: 'bg-teal-500',
-    ring: 'ring-teal-300',
+    color: "bg-[#1a7a6d]",
+    ring: "ring-[#1a7a6d]",
   },
   {
     key: 'no_card' as const,
     label: 'ไม่ได้ยืนยันตัวตน',
     subtitle: 'Auth_card · Auth_manual · Auth_NoSmartCard · NoSmartcard',
-    color: 'bg-orange-500',
-    ring: 'ring-orange-300',
+    color: "bg-[#b45309]",
+    ring: "ring-[#b45309]",
   },
 ];
 
@@ -89,11 +89,11 @@ export default function AuthVerificationChart({
   }, [stats]);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border-t-4 border-purple-500 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <div className="bg-white border border-[#d8e0e5] overflow-hidden">
+      <div className="px-6 py-4 border-b border-[#d8e0e5] bg-[#fafbfc] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-lg font-semibold text-[#0b3d4a]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>{title}</h2>
+          <p className="text-sm text-[#5c6b73] mt-1">
             {subtitle || 'กราฟ 3 แท่ง: ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน'}
           </p>
         </div>
@@ -131,26 +131,26 @@ export default function AuthVerificationChart({
             ))}
           </div>
 
-          <div className="rounded-xl border border-purple-100 bg-gradient-to-b from-purple-50 to-white p-4">
-            <div className="flex items-end justify-center gap-8 sm:gap-12 h-64 px-4 pb-2 border-b border-gray-200">
+          <div className="border border-[#d8e0e5] bg-[#fafbfc] p-4">
+            <div className="flex items-end justify-center gap-8 sm:gap-12 h-64 px-4 pb-2 border-b border-[#eef2f4]">
               {BAR_CONFIG.map((bar) => {
                 const value = stats[bar.key];
                 const height = `${Math.max((value / maxValue) * 100, value > 0 ? 6 : 0)}%`;
                 return (
                   <div key={bar.key} className="flex flex-col items-center h-full min-w-[88px] max-w-[140px] flex-1">
                     <div className="flex-1 w-full flex flex-col justify-end min-h-0 items-center">
-                      <span className="text-sm font-bold text-gray-900 mb-2">
+                      <span className="text-sm font-semibold text-[#0b3d4a] mb-2">
                         {value.toLocaleString('th-TH')}
                       </span>
                       <div
-                        className={`w-full max-w-[72px] rounded-t-lg transition-all duration-500 ${bar.color} ring-2 ${bar.ring}`}
+                        className={`w-full max-w-[64px] transition-all duration-500 ${bar.color}`}
                         style={{ height }}
                         title={`${bar.label}: ${value.toLocaleString('th-TH')}`}
                       />
                     </div>
                     <div className="mt-3 text-center">
-                      <p className="text-sm font-bold text-gray-900 leading-tight">{bar.label}</p>
-                      <p className="text-[10px] text-gray-500 mt-1 leading-tight">{bar.subtitle}</p>
+                      <p className="text-sm font-semibold text-[#0b3d4a] leading-tight">{bar.label}</p>
+                      <p className="text-[10px] text-[#5c6b73] mt-1 leading-tight">{bar.subtitle}</p>
                     </div>
                   </div>
                 );

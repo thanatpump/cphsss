@@ -12,9 +12,9 @@ export interface GroupedFacilityStats {
 }
 
 const SERIES = [
-  { key: 'total' as const, name: 'ทั้งหมด', color: '#9333ea' },
-  { key: 'with_card' as const, name: 'ยืนยันตัวตน', color: '#14b8a6' },
-  { key: 'no_card' as const, name: 'ไม่ได้ยืนยันตัวตน', color: '#f97316' },
+  { key: 'total' as const, name: 'ทั้งหมด', color: '#0b3d4a' },
+  { key: 'with_card' as const, name: 'ยืนยันตัวตน', color: '#1a7a6d' },
+  { key: 'no_card' as const, name: 'ไม่ได้ยืนยันตัวตน', color: '#b45309' },
 ];
 
 export default function AuthVerificationGroupedChart({
@@ -119,7 +119,7 @@ export default function AuthVerificationGroupedChart({
             value: facility[series.key],
             itemStyle:
               highlightHcode && facility.hcode === highlightHcode
-                ? { borderColor: '#4c1d95', borderWidth: 2 }
+                ? { borderColor: '#0b3d4a', borderWidth: 2 }
                 : undefined,
           })),
           label: {
@@ -143,15 +143,20 @@ export default function AuthVerificationGroupedChart({
   }, [facilities, highlightHcode]);
 
   return (
-    <div className="rounded-xl border border-indigo-100 bg-gradient-to-b from-indigo-50/60 to-white p-4">
-      <h3 className="text-lg font-bold text-gray-900">กราฟรวมทุก รพสต.</h3>
-      <p className="text-sm text-gray-600 mt-1 mb-4">
-        Grouped bar chart · เปรียบเทียบ ทั้งหมด / ยืนยันตัวตน / ไม่ได้ยืนยันตัวตน ต่อหน่วยบริการ
+    <div className="border border-[#d8e0e5] bg-[#fafbfc] p-4 sm:p-5">
+      <h3
+        className="text-base font-semibold text-[#0b3d4a]"
+        style={{ fontFamily: 'var(--font-ibm-plex)' }}
+      >
+        กราฟรวมทุกหน่วยบริการ
+      </h3>
+      <p className="text-sm text-[#5c6b73] mt-1 mb-4">
+        เปรียบเทียบทั้งหมด / ยืนยันตัวตน / ไม่ได้ยืนยันตัวตน ต่อหน่วยบริการ
       </p>
       {facilities.length === 0 ? (
-        <div className="py-10 text-center text-gray-500">ไม่มีข้อมูลสำหรับกราฟรวม</div>
+        <div className="py-10 text-center text-[#5c6b73] text-sm">ไม่มีข้อมูลสำหรับกราฟรวม</div>
       ) : (
-        <div ref={chartRef} className="w-full h-[440px]" />
+        <div ref={chartRef} className="w-full h-[440px] bg-white border border-[#eef2f4]" />
       )}
     </div>
   );

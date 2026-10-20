@@ -36,7 +36,7 @@ export default function AdminAuthenStmmPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <p className="text-gray-600">กำลังโหลด...</p>
       </div>
     );
@@ -45,14 +45,14 @@ export default function AdminAuthenStmmPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-md">
+    <div className="min-h-screen app-shell">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">เทียบ Authen กับ STMM</h1>
-            <p className="text-sm text-gray-600">Admin ดูได้ทุกสถานบริการ · กดแถวเพื่อดูรายละเอียดแต่ละ รพสต</p>
+            <h1 className="text-xl font-semibold text-white">เทียบ Authen กับ STMM</h1>
+            <p className="text-sm text-white/65">Admin ดูได้ทุกสถานบริการ · กดแถวเพื่อดูรายละเอียดแต่ละ รพสต</p>
           </div>
-          <Link href="/admin" className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+          <Link href="/admin" className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
             กลับหน้า Admin
           </Link>
         </div>

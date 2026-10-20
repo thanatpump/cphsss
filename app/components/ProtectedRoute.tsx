@@ -20,9 +20,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 border-b-2 border-[#1a7a6d] mx-auto mb-4"></div>
           <p className="text-gray-600">กำลังโหลด...</p>
         </div>
       </div>

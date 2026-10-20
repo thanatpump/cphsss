@@ -276,9 +276,9 @@ export default function HospcodeCheckPage() {
     const columns = Object.keys(data[0]);
     return (
       <div className="mb-8 bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+        <div className="bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a] px-6 py-4">
           <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <p className="text-blue-100 text-sm">จำนวนข้อมูล: {data.length} รายการ</p>
+          <p className="text-white/80 text-sm">จำนวนข้อมูล: {data.length} รายการ</p>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full">
@@ -311,52 +311,58 @@ export default function HospcodeCheckPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-10">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">SSO</span>
+    <div className="min-h-screen app-shell relative font-sans">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b3d4a]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center gap-3 py-3 sm:h-[4.25rem]">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 bg-[#1a7a6d] rounded-md flex items-center justify-center shrink-0">
+                <span className="text-white text-sm font-semibold tracking-[0.14em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">ระบบจัดสรรเงินประกันสังคมจังหวัดชัยภูมิ</h1>
-                <p className="text-sm text-gray-600">Social Security Office</p>
+              <div className="min-w-0">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/55" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  Social Security Office · Chaiyaphum
+                </p>
+                <h1 className="text-base sm:text-lg font-semibold text-white truncate" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  ตรวจสอบการส่งข้อมูล
+                </h1>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/"
-                className="inline-flex items-center rounded-lg border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
-              >
-                กลับหน้าแรก
-              </Link>
-            </div>
+            <Link
+              href="/"
+              className="shrink-0 px-3 py-2 rounded-md bg-white/10 hover:bg-white/15 text-white text-sm font-semibold border border-white/15"
+            >
+              หน้าหลัก
+            </Link>
           </div>
-          <p className="text-lg text-blue-700 text-center">เลือกประเภทหน่วยบริการและอำเภอเพื่อกรองข้อมูล (ไม่บังคับ)</p>
+        </div>
+      </header>
+      <div className="relative z-[1] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <p className="text-base text-[#5c6b73] text-center">เลือกประเภทหน่วยบริการและอำเภอเพื่อกรองข้อมูล (ไม่บังคับ)</p>
         </div>
 
         {/* Hospital List */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12 border-t-8 border-blue-400">
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12 border-t-8 border-[#1a7a6d]">
           <div className="flex items-center mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mr-4 shadow">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#1a7a6d] to-[#0b3d4a] rounded-full flex items-center justify-center mr-4 shadow">
               <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-blue-900 mb-1">{selectedAmp ? `หน่วยบริการในอำเภอ: ${selectedAmp}` : "ยอดรวมรายอำเภอทั้งหมด"}</h3>
-              <p className="text-md text-blue-600">
+              <h3 className="text-2xl font-bold text-[#0b3d4a] mb-1">{selectedAmp ? `หน่วยบริการในอำเภอ: ${selectedAmp}` : "ยอดรวมรายอำเภอทั้งหมด"}</h3>
+              <p className="text-md text-[#1a7a6d]">
                 {summaryLoading ? "กำลังโหลด..." : selectedAmp ? `พบ ${Object.values(hospSummary).filter((h: any) => h.amp_name === selectedAmp).length} โรงพยาบาล` : `พบ ${Object.keys(ampSummary).length} อำเภอ`}
               </p>
             </div>
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:space-x-6 mb-6">
             <div className="flex-1 mb-4 md:mb-0 order-2 md:order-1">
-              <label className="block text-blue-800 font-semibold mb-2">อำเภอ</label>
+              <label className="block text-[#0b3d4a] font-semibold mb-2">อำเภอ</label>
               <select
-                className="w-full border border-blue-200 rounded-lg px-5 py-3 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-blue-50"
+                className="w-full border border-[#d8e0e5] rounded-lg px-5 py-3 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-[#f4f6f8]"
                 value={selectedAmp}
                 onChange={e => setSelectedAmp(e.target.value)}
               >
@@ -367,9 +373,9 @@ export default function HospcodeCheckPage() {
               </select>
             </div>
             <div className="flex-1 order-1 md:order-2 mb-4 md:mb-0">
-              <label className="block text-blue-800 font-semibold mb-2">ประเภทหน่วยบริการ</label>
+              <label className="block text-[#0b3d4a] font-semibold mb-2">ประเภทหน่วยบริการ</label>
               <select
-                className="w-full border border-blue-200 rounded-lg px-5 py-3 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-blue-50"
+                className="w-full border border-[#d8e0e5] rounded-lg px-5 py-3 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-[#f4f6f8]"
                 value={selectedType}
                 onChange={e => setSelectedType(e.target.value)}
               >
@@ -381,16 +387,16 @@ export default function HospcodeCheckPage() {
           </div>
           
           {/* Date Filter Section */}
-          <div className="bg-blue-50 rounded-lg p-4 mb-6 border border-blue-200">
+          <div className="bg-[#f4f6f8] rounded-lg p-4 mb-6 border border-[#d8e0e5]">
             <div className="flex items-center mb-3">
               <input
                 type="checkbox"
                 id="useDateFilter"
                 checked={useDateFilter}
                 onChange={e => setUseDateFilter(e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-blue-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-[#1a7a6d] border-[#7dcdc0] rounded focus:ring-[#1a7a6d]"
               />
-              <label htmlFor="useDateFilter" className="ml-2 text-blue-800 font-semibold">
+              <label htmlFor="useDateFilter" className="ml-2 text-[#0b3d4a] font-semibold">
                 กรองตามช่วงเดือน-ปี
               </label>
             </div>
@@ -398,13 +404,13 @@ export default function HospcodeCheckPage() {
               <div className="mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                   {/* เริ่มต้น */}
-                  <div className="bg-white rounded-lg p-4 border border-blue-200">
-                    <h4 className="text-blue-800 font-semibold mb-3 text-center">ตั้งแต่</h4>
+                  <div className="bg-white rounded-lg p-4 border border-[#d8e0e5]">
+                    <h4 className="text-[#0b3d4a] font-semibold mb-3 text-center">ตั้งแต่</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-blue-800 font-semibold mb-2">เดือน</label>
+                        <label className="block text-[#0b3d4a] font-semibold mb-2">เดือน</label>
                         <select
-                          className="w-full border border-blue-200 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-white"
+                          className="w-full border border-[#d8e0e5] rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-white"
                           value={startMonth}
                           onChange={e => setStartMonth(parseInt(e.target.value))}
                         >
@@ -419,9 +425,9 @@ export default function HospcodeCheckPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-blue-800 font-semibold mb-2">ปี</label>
+                        <label className="block text-[#0b3d4a] font-semibold mb-2">ปี</label>
                         <select
-                          className="w-full border border-blue-200 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-white"
+                          className="w-full border border-[#d8e0e5] rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-white"
                           value={startYear}
                           onChange={e => setStartYear(parseInt(e.target.value))}
                         >
@@ -437,13 +443,13 @@ export default function HospcodeCheckPage() {
                   </div>
                   
                   {/* สิ้นสุด */}
-                  <div className="bg-white rounded-lg p-4 border border-blue-200">
-                    <h4 className="text-blue-800 font-semibold mb-3 text-center">ถึง</h4>
+                  <div className="bg-white rounded-lg p-4 border border-[#d8e0e5]">
+                    <h4 className="text-[#0b3d4a] font-semibold mb-3 text-center">ถึง</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-blue-800 font-semibold mb-2">เดือน</label>
+                        <label className="block text-[#0b3d4a] font-semibold mb-2">เดือน</label>
                         <select
-                          className="w-full border border-blue-200 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-white"
+                          className="w-full border border-[#d8e0e5] rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-white"
                           value={endMonth}
                           onChange={e => setEndMonth(parseInt(e.target.value))}
                         >
@@ -458,9 +464,9 @@ export default function HospcodeCheckPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-blue-800 font-semibold mb-2">ปี</label>
+                        <label className="block text-[#0b3d4a] font-semibold mb-2">ปี</label>
                         <select
-                          className="w-full border border-blue-200 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors shadow-sm bg-white"
+                          className="w-full border border-[#d8e0e5] rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] transition-colors shadow-sm bg-white"
                           value={endYear}
                           onChange={e => setEndYear(parseInt(e.target.value))}
                         >
@@ -488,7 +494,7 @@ export default function HospcodeCheckPage() {
                       setEndYear(currentYear);
                       setEndMonth(currentMonth);
                     }}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors shadow-sm"
+                    className="bg-[#1a7a6d] hover:bg-[#0b3d4a] text-white font-semibold py-2 px-6 rounded-lg transition-colors shadow-sm"
                   >
                     ตั้งค่าเป็นช่วงเริ่มต้น (ต.ค. ปีที่แล้ว - เดือนปัจจุบัน)
                   </button>
@@ -496,14 +502,14 @@ export default function HospcodeCheckPage() {
               </div>
             )}
           </div>
-          <div className="overflow-x-auto rounded-xl border border-blue-100 bg-gradient-to-br from-white to-blue-50">
+          <div className="overflow-x-auto rounded-xl border border-[#d8e0e5] bg-gradient-to-br from-white to-[#f4f6f8]">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="bg-gradient-to-r from-blue-100 to-blue-200">
-                  <th className="px-4 py-3 text-left text-xs font-bold text-blue-800 uppercase tracking-wider border-b">{selectedAmp ? "รหัส" : "อำเภอ"}</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-blue-800 uppercase tracking-wider border-b">{selectedAmp ? "ชื่อโรงพยาบาล" : ""}</th>
+                <tr className="bg-gradient-to-r from-[#e8f4f2] to-[#d5ebe7]">
+                  <th className="px-4 py-3 text-left text-xs font-bold text-[#0b3d4a] uppercase tracking-wider border-b">{selectedAmp ? "รหัส" : "อำเภอ"}</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-[#0b3d4a] uppercase tracking-wider border-b">{selectedAmp ? "ชื่อโรงพยาบาล" : ""}</th>
                   {summaryMonths.map(month => (
-                    <th key={month} className="px-4 py-3 text-center text-xs font-bold text-blue-800 uppercase tracking-wider border-b whitespace-nowrap">
+                    <th key={month} className="px-4 py-3 text-center text-xs font-bold text-[#0b3d4a] uppercase tracking-wider border-b whitespace-nowrap">
                       {(() => {
                         // รูปแบบ YYYY-MM (แสดงรายเดือน)
                         const [y, m] = month.split('-');
@@ -516,7 +522,7 @@ export default function HospcodeCheckPage() {
               </thead>
               <tbody className="bg-white divide-y divide-blue-100">
                 {summaryLoading ? (
-                  <tr><td colSpan={selectedAmp ? 2 + summaryMonths.length : 2 + summaryMonths.length} className="text-center py-8 text-blue-400">กำลังโหลดข้อมูล...</td></tr>
+                  <tr><td colSpan={selectedAmp ? 2 + summaryMonths.length : 2 + summaryMonths.length} className="text-center py-8 text-[#5c6b73]">กำลังโหลดข้อมูล...</td></tr>
                 ) : selectedAmp
                   ? (() => {
                       const selectedTypeData = hospitalTypes.find(type => type.id === selectedType);
@@ -534,15 +540,15 @@ export default function HospcodeCheckPage() {
                           const numB = parseInt(hospcodeB, 10);
                           return numA - numB;
                         });
-                      if (filteredHospList.length === 0) return <tr><td colSpan={2 + summaryMonths.length} className="text-center py-8 text-blue-400">ไม่พบข้อมูลโรงพยาบาลในอำเภอนี้</td></tr>;
+                      if (filteredHospList.length === 0) return <tr><td colSpan={2 + summaryMonths.length} className="text-center py-8 text-[#5c6b73]">ไม่พบข้อมูลโรงพยาบาลในอำเภอนี้</td></tr>;
                       return filteredHospList.map(([hospcode, val]: any) => {
                         // แสดงข้อมูลปกติ (หน้านี้ไม่ต้อง login แล้ว)
                         return (
-                          <tr key={hospcode} className="hover:bg-blue-50 transition-colors">
-                            <td className="px-4 py-3 text-blue-900 border-b font-mono whitespace-nowrap font-semibold">{hospcode}</td>
-                            <td className="px-4 py-3 text-blue-900 border-b whitespace-nowrap font-semibold">{val.name}</td>
+                          <tr key={hospcode} className="hover:bg-[#f4f6f8] transition-colors">
+                            <td className="px-4 py-3 text-[#0b3d4a] border-b font-mono whitespace-nowrap font-semibold">{hospcode}</td>
+                            <td className="px-4 py-3 text-[#0b3d4a] border-b whitespace-nowrap font-semibold">{val.name}</td>
                             {summaryMonths.map(month => (
-                              <td key={month} className="px-4 py-3 text-blue-900 border-b text-center font-bold">
+                              <td key={month} className="px-4 py-3 text-[#0b3d4a] border-b text-center font-bold">
                                 {val.summary[month] || 0}
                               </td>
                             ))}
@@ -551,11 +557,11 @@ export default function HospcodeCheckPage() {
                       });
                     })()
                   : Object.entries(ampSummary).map(([amp, val]: any) => (
-                      <tr key={amp} className="hover:bg-blue-50 transition-colors">
-                        <td className="px-4 py-3 text-blue-900 border-b whitespace-nowrap font-semibold">{amp}</td>
-                        <td className="px-4 py-3 text-blue-900 border-b"></td>
+                      <tr key={amp} className="hover:bg-[#f4f6f8] transition-colors">
+                        <td className="px-4 py-3 text-[#0b3d4a] border-b whitespace-nowrap font-semibold">{amp}</td>
+                        <td className="px-4 py-3 text-[#0b3d4a] border-b"></td>
                         {summaryMonths.map(month => (
-                          <td key={month} className="px-4 py-3 text-blue-900 border-b text-center font-bold">
+                          <td key={month} className="px-4 py-3 text-[#0b3d4a] border-b text-center font-bold">
                             {val.summary[month] || 0}
                           </td>
                         ))}
@@ -569,8 +575,8 @@ export default function HospcodeCheckPage() {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-8">
-            <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-blue-600 transition ease-in-out duration-150">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-[#1a7a6d] transition ease-in-out duration-150">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#1a7a6d]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -584,7 +590,7 @@ export default function HospcodeCheckPage() {
           <div className="space-y-6">
             {stmmSummary.length > 0 && (
               <div className="mb-8 bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
+                <div className="bg-gradient-to-r from-[#0b3d4a] to-[#072a33] px-6 py-4">
                   <h2 className="text-lg font-semibold text-white">สรุปจำนวนคนไข้ STMM รายเดือน</h2>
                 </div>
                 <div className="overflow-x-auto">

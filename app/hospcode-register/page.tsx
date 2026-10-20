@@ -74,18 +74,31 @@ export default function HospcodeRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <div className="bg-white rounded-lg shadow-xl p-8">
+    <div className="app-shell relative min-h-screen flex items-center justify-center p-4">
+      <div className="relative z-[1] max-w-2xl w-full">
+        <div className="mb-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#1a7a6d] font-semibold hover:underline">
+            ← กลับหน้าหลัก
+          </Link>
+        </div>
+        <div className="app-card p-8 shadow-sm">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-              </svg>
+            <div className="w-14 h-14 bg-[#1a7a6d] rounded-md flex items-center justify-center mx-auto mb-4">
+              <span
+                className="text-white text-sm font-semibold tracking-[0.14em]"
+                style={{ fontFamily: 'var(--font-ibm-plex)' }}
+              >
+                SSO
+              </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">สมัครสมาชิก</h1>
-            <p className="text-gray-600">ระบบตรวจสอบการส่งข้อมูล</p>
+            <h1
+              className="text-2xl font-semibold text-[#0b3d4a] mb-2"
+              style={{ fontFamily: 'var(--font-ibm-plex)' }}
+            >
+              สมัครสมาชิก
+            </h1>
+            <p className="text-[#5c6b73] text-sm">ระบบตรวจสอบการส่งข้อมูล</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -101,7 +114,7 @@ export default function HospcodeRegisterPage() {
                   type="text"
                   value={formData.first_name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                   required
                 />
               </div>
@@ -115,7 +128,7 @@ export default function HospcodeRegisterPage() {
                   type="text"
                   value={formData.last_name}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                   required
                 />
               </div>
@@ -132,7 +145,7 @@ export default function HospcodeRegisterPage() {
                 type="tel"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 placeholder="08X-XXX-XXXX"
                 required
               />
@@ -150,7 +163,7 @@ export default function HospcodeRegisterPage() {
                 value={formData.citizen_id}
                 onChange={handleChange}
                 maxLength={13}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 placeholder="1234567890123"
                 required
               />
@@ -167,7 +180,7 @@ export default function HospcodeRegisterPage() {
                 type="date"
                 value={formData.birth_date}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 required
               />
             </div>
@@ -183,7 +196,7 @@ export default function HospcodeRegisterPage() {
                 type="text"
                 value={formData.hospital_name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 required
               />
             </div>
@@ -199,7 +212,7 @@ export default function HospcodeRegisterPage() {
                 type="text"
                 value={formData.position}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 required
               />
             </div>
@@ -215,7 +228,7 @@ export default function HospcodeRegisterPage() {
                 type="text"
                 value={formData.username}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                 required
                 minLength={3}
               />
@@ -233,7 +246,7 @@ export default function HospcodeRegisterPage() {
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                   required
                   minLength={6}
                 />
@@ -248,7 +261,7 @@ export default function HospcodeRegisterPage() {
                   type="password"
                   value={formData.confirm_password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent"
                   required
                   minLength={6}
                 />
@@ -264,7 +277,7 @@ export default function HospcodeRegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              className="app-btn-primary w-full py-3 rounded-md font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'กำลังสมัครสมาชิก...' : 'สมัครสมาชิก'}
             </button>
@@ -272,7 +285,7 @@ export default function HospcodeRegisterPage() {
             <div className="text-center">
               <p className="text-gray-600">
                 มีบัญชีอยู่แล้ว?{' '}
-                <Link href="/hospcode-login" className="text-blue-500 hover:text-blue-600 font-semibold">
+                <Link href="/hospcode-login" className="text-[#1a7a6d] hover:text-[#15685d] font-semibold">
                   เข้าสู่ระบบ
                 </Link>
               </p>

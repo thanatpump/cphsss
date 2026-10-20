@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import AuthVerificationFacilitiesChart from './components/AuthVerificationFacilitiesChart';
@@ -13,24 +12,9 @@ interface AllocationUser {
 }
 
 const NAV_ITEMS = [
-  {
-    href: '/allocation-check',
-    label: 'ตรวจสอบจัดสรรเงิน',
-    icon: '/id.png',
-    className: 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600',
-  },
-  {
-    href: '/hospcode-check',
-    label: 'ตรวจสอบการส่งข้อมูล',
-    icon: '/pay.png',
-    className: 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700',
-  },
-  {
-    href: '/login',
-    label: 'อัพโหลด / Dashboard',
-    icon: '/dash.png',
-    className: 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800',
-  },
+  { href: '/allocation-check', label: 'ตรวจสอบจัดสรรเงิน', shortLabel: 'จัดสรร' },
+  { href: '/hospcode-check', label: 'ตรวจสอบการส่งข้อมูล', shortLabel: 'ส่งข้อมูล' },
+  { href: '/login', label: 'อัปโหลด / Dashboard', shortLabel: 'Dashboard' },
 ] as const;
 
 export default function Home() {
@@ -52,42 +36,56 @@ export default function Home() {
   if (isAuthenticated) {
     window.location.href = '/dashboard';
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">กำลังเข้าสู่ระบบ...</p>
+      <div className="min-h-screen home-shell flex items-center justify-center">
+        <div className="text-center home-fade">
+          <div className="mx-auto mb-4 h-10 w-10 border-2 border-[#0b3d4a] border-t-transparent rounded-full animate-spin" />
+          <p className="text-[#5c6b73] font-[family-name:var(--font-sarabun)]">กำลังเข้าสู่ระบบ...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-md border-b border-gray-200 sticky top-0 z-50">
+    <div className="home-shell relative">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b3d4a]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:h-16 gap-2 py-3 lg:py-0">
-            <div className="flex items-center gap-3 min-w-0 shrink-0">
-              <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center shrink-0">
-                <span className="text-white font-bold text-lg">SSO</span>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 py-3 lg:py-0 lg:h-[4.25rem]">
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="h-11 w-11 shrink-0 rounded-md bg-[#1a7a6d] flex items-center justify-center">
+                <span
+                  className="text-white text-sm font-semibold tracking-[0.14em]"
+                  style={{ fontFamily: 'var(--font-ibm-plex)' }}
+                >
+                  SSO
+                </span>
               </div>
               <div className="min-w-0">
-                <h1 className="text-base sm:text-lg font-bold text-gray-900 truncate">
+                <p
+                  className="text-[11px] uppercase tracking-[0.18em] text-white/55"
+                  style={{ fontFamily: 'var(--font-ibm-plex)' }}
+                >
+                  Social Security Office · Chaiyaphum
+                </p>
+                <h1
+                  className="text-base sm:text-lg font-semibold text-white truncate leading-tight"
+                  style={{ fontFamily: 'var(--font-ibm-plex)' }}
+                >
                   ระบบจัดสรรเงินประกันสังคมจังหวัดชัยภูมิ
                 </h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Social Security Office</p>
               </div>
             </div>
 
-            <nav className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
+            <nav className="flex items-center gap-1 overflow-x-auto pb-0.5 lg:pb-0 -mx-1 px-1">
               {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-white text-sm font-semibold whitespace-nowrap shrink-0 transition-all shadow-sm ${item.className}`}
+                  className="group relative shrink-0 px-3 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors whitespace-nowrap"
+                  style={{ fontFamily: 'var(--font-sarabun)' }}
                 >
-                  <Image src={item.icon} alt="" width={18} height={18} className="object-contain shrink-0" />
                   <span className="hidden md:inline">{item.label}</span>
-                  <span className="md:hidden">{item.label.split(' ')[0]}</span>
+                  <span className="md:hidden">{item.shortLabel}</span>
+                  <span className="pointer-events-none absolute inset-x-3 -bottom-0.5 h-px scale-x-0 bg-[#7dcdc0] transition-transform duration-200 group-hover:scale-x-100" />
                 </Link>
               ))}
             </nav>
@@ -95,19 +93,47 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AuthVerificationFacilitiesChart
-          highlightHcode={allocationUser?.username}
-          title="สถิติการยืนยันตัวตนแต่ละ รพสต."
-          subtitle={
-            allocationUser
-                ? 'กราฟ 3 แท่งต่อหน่วยบริการ · ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน · รพสต. ของคุณจะถูกไฮไลต์'
-                : 'กราฟ 3 แท่งต่อหน่วยบริการ · ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน'
-          }
-        />
+      <main className="relative z-[1] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <section className="home-rise mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b border-[#d8e0e5] pb-5">
+            <div>
+              <p
+                className="text-xs font-medium tracking-[0.16em] uppercase text-[#1a7a6d] mb-2"
+                style={{ fontFamily: 'var(--font-ibm-plex)' }}
+              >
+                ศูนย์ข้อมูล · Dashboard
+              </p>
+              <h2
+                className="text-2xl sm:text-3xl font-semibold text-[#0b3d4a] tracking-tight"
+                style={{ fontFamily: 'var(--font-ibm-plex)' }}
+              >
+                สถิติการยืนยันตัวตน
+              </h2>
+              <p className="mt-2 text-sm text-[#5c6b73] max-w-2xl leading-relaxed">
+                ภาพรวมการยืนยันตัวตนของหน่วยบริการในจังหวัดชัยภูมิ
+                {allocationUser
+                  ? ` · ไฮไลต์หน่วยของคุณ (${allocationUser.username})`
+                  : ''}
+              </p>
+            </div>
+            <div className="text-left sm:text-right text-xs text-[#5c6b73] space-y-1">
+              <p>ข้อมูลจากระบบ authen_code</p>
+              <p>อัปเดตตามช่วงวันที่ที่เลือก</p>
+            </div>
+          </div>
+        </section>
 
-        <footer className="text-center mt-12">
-          <p className="text-gray-600 text-sm">&copy; 2025 ระบบจัดการข้อมูล SSO. สงวนลิขสิทธิ์.</p>
+        <section className="home-rise-delay">
+          <AuthVerificationFacilitiesChart
+            highlightHcode={allocationUser?.username}
+            title="สถิติการยืนยันตัวตนแต่ละหน่วยบริการ"
+            subtitle="ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน"
+          />
+        </section>
+
+        <footer className="mt-12 pt-6 border-t border-[#d8e0e5] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-[#5c6b73]">
+          <p>สำนักงานประกันสังคมจังหวัดชัยภูมิ</p>
+          <p>© {new Date().getFullYear()} ระบบจัดการข้อมูล SSO</p>
         </footer>
       </main>
     </div>

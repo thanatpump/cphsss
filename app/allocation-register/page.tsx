@@ -94,25 +94,25 @@ export default function AllocationRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50">
+    <div className="min-h-screen app-shell">
       {/* Header */}
-      <header className="bg-white shadow-md">
+      <header className="bg-[#0b3d4a] border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">💰</span>
+              <div className="w-10 h-10 bg-[#1a7a6d] rounded-md flex items-center justify-center mr-3">
+                <span className="text-white text-xs font-semibold tracking-[0.12em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">ตรวจสอบข้อมูลการจัดสรรเงิน</h1>
-                <p className="text-sm text-gray-600">Budget Allocation Check System</p>
+                <h1 className="text-2xl font-bold text-white">ตรวจสอบข้อมูลการจัดสรรเงิน</h1>
+                <p className="text-sm text-white/70">Budget Allocation Check System</p>
               </div>
             </div>
             <Link
               href="/allocation-check"
-              className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+              className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors"
             >
-              ← กลับไปหน้า Login
+              กลับไปหน้า Login
             </Link>
           </div>
         </div>
@@ -121,15 +121,13 @@ export default function AllocationRegisterPage() {
       {/* Register Form */}
       <div className="flex items-center justify-center p-4 py-10">
         <div className="max-w-2xl w-full">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 border-t-4 border-yellow-500">
+          <div className="app-card p-8 shadow-sm">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                </svg>
+              <div className="w-14 h-14 bg-[#1a7a6d] rounded-md flex items-center justify-center mx-auto mb-4">
+                <span className="text-white text-sm font-semibold tracking-[0.14em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
-              <h1 className="text-3xl font-extrabold text-gray-800 mb-2">สมัครสมาชิก</h1>
-              <p className="text-gray-600">ระบบตรวจสอบข้อมูลการจัดสรรเงิน</p>
+              <h1 className="text-2xl font-semibold text-[#0b3d4a] mb-2" style={{ fontFamily: 'var(--font-ibm-plex)' }}>สมัครสมาชิก</h1>
+              <p className="text-[#5c6b73] text-sm">ระบบตรวจสอบข้อมูลการจัดสรรเงิน</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,7 +143,7 @@ export default function AllocationRegisterPage() {
                     type="text"
                     value={formData.first_name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                     required
                   />
                 </div>
@@ -159,7 +157,7 @@ export default function AllocationRegisterPage() {
                     type="text"
                     value={formData.last_name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                     required
                   />
                 </div>
@@ -176,7 +174,7 @@ export default function AllocationRegisterPage() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                   placeholder="08X-XXX-XXXX"
                   required
                 />
@@ -194,7 +192,7 @@ export default function AllocationRegisterPage() {
                   value={formData.citizen_id}
                   onChange={handleChange}
                   maxLength={13}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                   placeholder="1234567890123"
                   required
                 />
@@ -211,7 +209,7 @@ export default function AllocationRegisterPage() {
                   type="date"
                   value={formData.birth_date}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                   required
                 />
               </div>
@@ -234,7 +232,7 @@ export default function AllocationRegisterPage() {
                     list="hospital-options"
                     value={formData.hospital_name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                     placeholder="พิมพ์ค้นหาชื่อ รพสต..."
                     required
                   />
@@ -262,7 +260,7 @@ export default function AllocationRegisterPage() {
                   type="text"
                   value={formData.position}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                   required
                 />
               </div>
@@ -278,7 +276,7 @@ export default function AllocationRegisterPage() {
                   type="text"
                   value={formData.username}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                   required
                   minLength={3}
                 />
@@ -296,7 +294,7 @@ export default function AllocationRegisterPage() {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                     required
                     minLength={6}
                   />
@@ -311,7 +309,7 @@ export default function AllocationRegisterPage() {
                     type="password"
                     value={formData.confirm_password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d]"
                     required
                     minLength={6}
                   />
@@ -327,15 +325,15 @@ export default function AllocationRegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-4 rounded-lg hover:from-yellow-500 hover:to-orange-600 focus:ring-4 focus:ring-yellow-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg shadow-lg"
+                className="w-full bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a] text-white py-4 rounded-lg hover:from-[#15685d] hover:to-[#072a33] focus:ring-4 focus:ring-[#7dcdc0] transition-all disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg shadow-lg"
               >
                 {loading ? 'กำลังสมัครสมาชิก...' : 'สมัครสมาชิก'}
               </button>
 
               <div className="text-center">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white/70">
                   มีบัญชีอยู่แล้ว?{' '}
-                  <Link href="/allocation-check" className="text-yellow-600 hover:text-yellow-700 font-semibold">
+                  <Link href="/allocation-check" className="text-[#1a7a6d] hover:text-[#0b3d4a] font-semibold">
                     เข้าสู่ระบบ
                   </Link>
                 </p>

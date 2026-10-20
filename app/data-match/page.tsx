@@ -115,7 +115,7 @@ function HospitalSummaryTable({
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full text-sm">
-        <thead className="bg-indigo-700 text-white">
+        <thead className="bg-[#0b3d4a] text-white">
           <tr>
             <th className="px-4 py-3 text-left font-semibold">#</th>
             <th className="px-4 py-3 text-left font-semibold">ชื่อสถานบริการ</th>
@@ -130,7 +130,7 @@ function HospitalSummaryTable({
             <tr
               key={group.hcare}
               onClick={() => onSelect(group.hcare)}
-              className="cursor-pointer transition-colors hover:bg-indigo-50"
+              className="cursor-pointer transition-colors hover:bg-[#e8f4f2]"
             >
               <td className="px-4 py-3 text-gray-500">{index + 1}</td>
               <td className="px-4 py-3 font-medium text-gray-900">{hcareLabel(group)}</td>
@@ -146,7 +146,7 @@ function HospitalSummaryTable({
                     e.stopPropagation();
                     onSelect(group.hcare);
                   }}
-                  className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+                  className="rounded-lg bg-[#1a7a6d] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#15685d]"
                 >
                   ดูรายละเอียด
                 </button>
@@ -163,7 +163,7 @@ function HcareDataTable({ rows }: { rows: MatchTableRow[] }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200">
       <table className="min-w-full text-xs md:text-sm">
-        <thead className="bg-blue-700 text-white">
+        <thead className="bg-[#0b3d4a] text-white">
           <tr>
             <th className="px-3 py-2 text-left font-semibold">#</th>
             <th className="px-3 py-2 text-left font-semibold">HCare</th>
@@ -351,10 +351,10 @@ export default function DataMatchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 p-6 md:p-8">
+    <div className="min-h-screen app-shell p-6 md:p-8">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-8">
-          <Link href="/upload" className="mb-4 inline-flex items-center text-blue-700 hover:text-blue-900">
+          <Link href="/upload" className="mb-4 inline-flex items-center text-[#0b3d4a] hover:text-[#0b3d4a]">
             <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -381,9 +381,9 @@ export default function DataMatchPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-blue-200 bg-blue-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-lg font-bold text-blue-900">authen_code</h2>
-            <p className="text-sm text-blue-900">
+          <div className="rounded-xl border border-[#d8e0e5] bg-[#e8f4f2] p-6 shadow-lg">
+            <h2 className="mb-2 text-lg font-bold text-[#0b3d4a]">authen_code</h2>
+            <p className="text-sm text-[#0b3d4a]">
               เดือน {month || '-'}:{' '}
               <strong>{authenTotal != null ? authenTotal.toLocaleString('th-TH') : '...'}</strong> รายการ
             </p>
@@ -399,7 +399,7 @@ export default function DataMatchPage() {
             type="month"
             value={month}
             onChange={(e) => handleMonthChange(e.target.value)}
-            className="w-full max-w-xs rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+            className="w-full max-w-xs rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-[#1a7a6d] focus:outline-none"
           />
           <p className="mt-2 text-xs text-gray-500">
             ชน SOGNSTMM + SOGNSTMP กับ authen_code แล้วแสดงสรุปแยกตามสถานบริการ
@@ -410,7 +410,7 @@ export default function DataMatchPage() {
           <button
             onClick={handleMatch}
             disabled={loading || !month}
-            className="rounded-lg bg-indigo-600 px-8 py-3 font-semibold text-white shadow hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className="rounded-lg bg-[#1a7a6d] px-8 py-3 font-semibold text-white shadow hover:bg-[#15685d] disabled:cursor-not-allowed disabled:bg-gray-400"
           >
             {loading ? 'กำลังชนข้อมูล...' : 'เริ่มชนข้อมูล'}
           </button>
@@ -483,7 +483,7 @@ export default function DataMatchPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedHcare(null)}
-                    className="mb-3 inline-flex items-center text-sm font-semibold text-indigo-700 hover:text-indigo-900"
+                    className="mb-3 inline-flex items-center text-sm font-semibold text-[#0b3d4a] hover:text-[#072a33]"
                   >
                     ← กลับรายการสถานบริการ
                   </button>

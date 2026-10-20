@@ -135,7 +135,7 @@ export default function DataSIGNSTMMPage() {
           <div className="flex gap-4">
             <Link 
               href="/upload-signstmm"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-[#1a7a6d] text-white px-4 py-2 rounded-lg hover:bg-[#0b3d4a] transition-colors"
             >
               อัปโหลดไฟล์ใหม่
             </Link>

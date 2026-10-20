@@ -176,25 +176,25 @@ export default function DashboardPage() {
     const columns = table.rows.length > 0 ? Object.keys(table.rows[0]) : [];
   return (
       <div className="mb-12 bg-white rounded-2xl shadow-xl overflow-hidden border-t-8 border-blue-400">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex items-center">
+        <div className="bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a] px-6 py-4 flex items-center">
           <h2 className="text-2xl font-bold text-white tracking-wide flex-1 drop-shadow">{title}</h2>
-          <span className="text-blue-100 text-sm font-semibold">{table.rows.length} รายการ</span>
+          <span className="text-white/80 text-sm font-semibold">{table.rows.length} รายการ</span>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>
-              <tr className="bg-gradient-to-r from-blue-100 to-blue-200">
+              <tr className="bg-gradient-to-r from-[#e8f4f2] to-[#d5ebe7]">
                 {columns.map(col => (
-                  <th key={col} className="px-4 py-3 text-left text-xs font-bold text-blue-800 uppercase tracking-wider border-b">{col}</th>
+                  <th key={col} className="px-4 py-3 text-left text-xs font-bold text-[#0b3d4a] uppercase tracking-wider border-b">{col}</th>
                 ))}
                   </tr>
                 </thead>
             <tbody className="bg-white divide-y divide-blue-100">
               {table.rows.length === 0 ? (
-                <tr><td colSpan={columns.length} className="text-center py-8 text-blue-400">ไม่มีข้อมูล</td></tr>
+                <tr><td colSpan={columns.length} className="text-center py-8 text-[#5c6b73]">ไม่มีข้อมูล</td></tr>
               ) : (
                 table.rows.map((row, idx) => (
-                  <tr key={row.id || idx} className="hover:bg-blue-50 transition-colors">
+                  <tr key={row.id || idx} className="hover:bg-[#e8f4f2] transition-colors">
                     {columns.map(col => (
                       <td key={col} className="px-4 py-3 text-gray-900 border-b max-w-xs truncate" title={row[col]?.toString() || "-"}>
                         {row[col]?.toString() || "-"}
@@ -215,15 +215,15 @@ export default function DashboardPage() {
   const renderPagination = (pagination: PaginationInfo, onPageChange: (page: number) => void) => (
     <div className="flex justify-center items-center gap-2 mt-4 pb-4">
       <button
-        className="px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow"
+        className="px-4 py-2 rounded-lg bg-[#e8f4f2] text-[#0b3d4a] font-semibold hover:bg-[#d4ebe7] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow"
         onClick={() => onPageChange(pagination.page - 1)}
         disabled={pagination.page === 1}
       >
         ก่อนหน้า
       </button>
-      <span className="mx-2 text-blue-800 font-bold text-lg">หน้า {pagination.page} / {pagination.totalPages}</span>
+      <span className="mx-2 text-[#0b3d4a] font-bold text-lg">หน้า {pagination.page} / {pagination.totalPages}</span>
       <button
-        className="px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow"
+        className="px-4 py-2 rounded-lg bg-[#e8f4f2] text-[#0b3d4a] font-semibold hover:bg-[#d4ebe7] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow"
         onClick={() => onPageChange(pagination.page + 1)}
         disabled={pagination.page === pagination.totalPages}
                 >
@@ -252,7 +252,7 @@ export default function DashboardPage() {
     if (summaryLoading) {
       return (
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="text-center text-blue-500 animate-pulse">กำลังโหลดข้อมูลสรุป...</div>
+          <div className="text-center text-[#1a7a6d] animate-pulse">กำลังโหลดข้อมูลสรุป...</div>
         </div>
       );
     }
@@ -260,7 +260,7 @@ export default function DashboardPage() {
     if (monthlySummary.length === 0) {
       return (
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-xl font-bold text-blue-900 mb-4">สรุปจำนวนผู้ป่วยรายเดือน (SIGNSTMM)</h3>
+          <h3 className="text-xl font-bold text-[#0b3d4a] mb-4">สรุปจำนวนผู้ป่วยรายเดือน (SIGNSTMM)</h3>
           <div className="text-center text-gray-500 py-8">ไม่มีข้อมูล</div>
         </div>
       );
@@ -270,8 +270,8 @@ export default function DashboardPage() {
     const displayData = monthlySummary.slice(0, 12).reverse();
 
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500">
-        <h3 className="text-xl font-bold text-blue-900 mb-6">สรุปจำนวนผู้ป่วยรายเดือน (SIGNSTMM)</h3>
+      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-[#1a7a6d]">
+        <h3 className="text-xl font-bold text-[#0b3d4a] mb-6">สรุปจำนวนผู้ป่วยรายเดือน (SIGNSTMM)</h3>
         <div className="space-y-4">
           {displayData.map((item, idx) => {
             const [year, month] = item.month.split('-');
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 bg-gray-200 rounded-full h-8 overflow-hidden relative">
                   <div 
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-full flex items-center justify-end pr-3 transition-all duration-500"
+                    className="bg-gradient-to-r from-[#0b3d4a] to-[#072a33] h-full flex items-center justify-end pr-3 transition-all duration-500"
                     style={{ width: `${percentage}%` }}
                   >
                     <span className="text-white text-xs font-bold">{item.patient_count.toLocaleString()}</span>
@@ -302,17 +302,17 @@ export default function DashboardPage() {
   // ฟังก์ชันแสดงกราฟเปรียบเทียบข้อมูล (Bar Chart แนวนอน)
   const renderComparisonChart = () => {
     const stats = [
-      { name: 'ผู้ป่วยใน', value: hospitalStats.signstmm, color: 'bg-blue-500' },
+      { name: 'ผู้ป่วยใน', value: hospitalStats.signstmm, color: 'bg-[#1a7a6d]' },
       { name: 'ผู้ป่วยในสรุป', value: hospitalStats.signstms, color: 'bg-green-500' },
-      { name: 'ผู้ป่วยนอก', value: hospitalStats.sognstmm, color: 'bg-purple-500' },
+      { name: 'ผู้ป่วยนอก', value: hospitalStats.sognstmm, color: 'bg-[#15685d]' },
       { name: 'ผู้ป่วยนอกพิเศษ', value: hospitalStats.sognstmp, color: 'bg-orange-500' },
     ];
     
     const maxValue = Math.max(...stats.map(s => s.value), 1);
 
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500">
-        <h3 className="text-xl font-bold text-blue-900 mb-6">เปรียบเทียบจำนวนผู้ป่วย</h3>
+      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-[#1a7a6d]">
+        <h3 className="text-xl font-bold text-[#0b3d4a] mb-6">เปรียบเทียบจำนวนผู้ป่วย</h3>
         <div className="space-y-4">
           {stats.map((stat, idx) => {
             const percentage = (stat.value / maxValue) * 100;
@@ -365,8 +365,8 @@ export default function DashboardPage() {
     ).join(' ');
 
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-indigo-500">
-        <h3 className="text-xl font-bold text-blue-900 mb-6">แนวโน้มจำนวนผู้ป่วยรายเดือน</h3>
+      <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-[#1a7a6d]">
+        <h3 className="text-xl font-bold text-[#0b3d4a] mb-6">แนวโน้มจำนวนผู้ป่วยรายเดือน</h3>
         <div className="overflow-x-auto">
           <svg width={width} height={height} className="mx-auto">
             {/* Grid lines */}
@@ -440,26 +440,33 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-10 font-sans">
-      <div className="bg-white shadow-md border-b sticky top-0 z-10">
+    <div className="min-h-screen app-shell relative pb-10 font-sans">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center py-8 gap-4">
-            <div>
-              <h1 className="text-4xl font-extrabold text-blue-900 tracking-tight drop-shadow mb-2">ระบบจัดสรรเงินประกันสังคมจังหวัดชัยภูมิ</h1>
-              <div className="text-blue-700 font-semibold text-lg mb-2">
-                ยินดีต้อนรับ {hosname ? `: ${hosname}` : ''} {hospcode ? `(รหัส: ${hospcode})` : ''}
+          <div className="flex flex-col md:flex-row justify-between items-center py-4 gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-11 w-11 shrink-0 rounded-md bg-[#1a7a6d] flex items-center justify-center">
+                <span className="text-white text-sm font-semibold tracking-[0.14em]" style={{ fontFamily: 'var(--font-ibm-plex)' }}>SSO</span>
               </div>
-              <div className="mt-4 flex gap-3 flex-wrap">
-                <Link href="/upload">
-                  <button className="bg-green-600 text-white px-6 py-2 rounded-lg shadow hover:bg-green-700 transition-colors font-semibold text-lg">
-                    อัปโหลดข้อมูลกลาง
-                  </button>
-                </Link>
-                <Link href="/hospcode-check">
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition-colors font-semibold text-lg">
-                    ตรวจสอบข้อมูล
-                  </button>
-                </Link>
+              <div className="min-w-0">
+                <h1 className="text-lg md:text-xl font-semibold text-white tracking-tight" style={{ fontFamily: 'var(--font-ibm-plex)' }}>
+                  ระบบจัดสรรเงินประกันสังคมจังหวัดชัยภูมิ
+                </h1>
+                <div className="text-white/70 text-sm">
+                  ยินดีต้อนรับ {hosname ? `: ${hosname}` : ''} {hospcode ? `(รหัส: ${hospcode})` : ''}
+                </div>
+                <div className="mt-3 flex gap-2 flex-wrap">
+                  <Link href="/upload">
+                    <button className="bg-[#1a7a6d] hover:bg-[#15685d] text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors">
+                      อัปโหลดข้อมูลกลาง
+                    </button>
+                  </Link>
+                  <Link href="/hospcode-check">
+                    <button className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors">
+                      ตรวจสอบข้อมูล
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
             <button
@@ -467,21 +474,21 @@ export default function DashboardPage() {
                 logout();
                 router.push('/');
               }}
-              className="bg-red-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors shadow text-lg"
+              className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-4 py-2 rounded-md text-sm font-semibold transition-colors"
             >
               ออกจากระบบ
             </button>
           </div>
         </div>
-      </div>
+      </header>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative z-[1] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          {renderStatsCard('ผู้มาใช้บริการวันนี้', todayLoading ? 0 : todayUsageCount, '👤', 'border-indigo-500')}
-          {renderStatsCard('ผู้ป่วยใน (SIGNSTMM)', hospitalStats.signstmm, '🏥', 'border-blue-500')}
+          {renderStatsCard('ผู้มาใช้บริการวันนี้', todayLoading ? 0 : todayUsageCount, '👤', 'border-[#1a7a6d]')}
+          {renderStatsCard('ผู้ป่วยใน (SIGNSTMM)', hospitalStats.signstmm, '🏥', 'border-[#1a7a6d]')}
           {renderStatsCard('ผู้ป่วยในสรุป (SIGNSTMS)', hospitalStats.signstms, '📋', 'border-green-500')}
-          {renderStatsCard('ผู้ป่วยนอก (SOGNSTMM)', hospitalStats.sognstmm, '👥', 'border-purple-500')}
+          {renderStatsCard('ผู้ป่วยนอก (SOGNSTMM)', hospitalStats.sognstmm, '👥', 'border-[#1a7a6d]')}
           {renderStatsCard('ผู้ป่วยนอกพิเศษ (SOGNSTMP)', hospitalStats.sognstmp, '⭐', 'border-orange-500')}
         </div>
 
@@ -515,7 +522,7 @@ export default function DashboardPage() {
 
         {/* Data Tables */}
         {loading ? (
-          <div className="text-center text-blue-500 text-xl animate-pulse py-12">กำลังโหลดข้อมูล...</div>
+          <div className="text-center text-[#1a7a6d] text-xl animate-pulse py-12">กำลังโหลดข้อมูล...</div>
         ) : (
           <>
             {renderTable('SIGNSTMM (ผู้ป่วยใน)', signstmm, (page) => fetchTableData('signstmm', page))}

@@ -87,18 +87,18 @@ export default function DbInfo() {
               {/* SIGNSTMM */}
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-[#1a7a6d] rounded-lg flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">S</span>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">SIGNSTMM</p>
-                    <p className="text-2xl font-bold text-blue-600">{stats.signstmm.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-[#1a7a6d]">{stats.signstmm.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <Link 
                     href="/data-signstmm"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    className="text-[#1a7a6d] hover:text-[#0b3d4a] text-sm font-medium"
                   >
                     ดูข้อมูล →
                   </Link>
@@ -129,18 +129,18 @@ export default function DbInfo() {
               {/* SOGNSTMM */}
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-[#15685d] rounded-lg flex items-center justify-center mr-4">
                     <span className="text-white font-bold text-lg">O</span>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">SOGNSTMM</p>
-                    <p className="text-2xl font-bold text-purple-600">{stats.sognstmm.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-[#1a7a6d]">{stats.sognstmm.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <Link 
                     href="/data-sognstmm"
-                    className="text-purple-600 hover:text-purple-800 text-sm font-medium"
+                    className="text-[#1a7a6d] hover:text-[#0b3d4a] text-sm font-medium"
                   >
                     ดูข้อมูล →
                   </Link>

@@ -82,19 +82,19 @@ export default function AdminChecksPage() {
   const end = useMemo(() => (pagination.page - 1) * pagination.limit + rows.length, [pagination.page, pagination.limit, rows.length]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-md">
+    <div className="min-h-screen app-shell">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xl">🗂️</div>
+            <div className="w-12 h-12 rounded-lg bg-[#1a7a6d] text-white flex items-center justify-center text-xl">🗂️</div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">รายการตรวจสอบ (ssop_image)</h1>
-              <p className="text-sm text-gray-600">เฉพาะ adminserver</p>
+              <h1 className="text-xl font-semibold text-white">รายการตรวจสอบ (ssop_image)</h1>
+              <p className="text-sm text-white/65">เฉพาะ adminserver</p>
             </div>
           </div>
           <Link
             href="/admin"
-            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+            className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors"
           >
             กลับหน้า Admin
           </Link>
@@ -166,7 +166,7 @@ export default function AdminChecksPage() {
                             href={imgUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                            className="inline-flex items-center rounded-md bg-[#1a7a6d] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0b3d4a]"
                           >
                             เปิดรูป
                           </a>

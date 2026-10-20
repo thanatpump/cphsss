@@ -17,22 +17,19 @@ const BAR_CONFIG = [
     key: 'total' as const,
     label: 'ทั้งหมด',
     subtitle: 'รายการทั้งหมด',
-    color: 'bg-purple-500',
-    ring: 'ring-purple-300',
+    color: 'bg-[#0b3d4a]',
   },
   {
     key: 'with_card' as const,
     label: 'ยืนยันตัวตน',
     subtitle: 'Auth_hospital · Auth_hosxp · Auth_OnSmartCard',
-    color: 'bg-teal-500',
-    ring: 'ring-teal-300',
+    color: 'bg-[#1a7a6d]',
   },
   {
     key: 'no_card' as const,
     label: 'ไม่ได้ยืนยันตัวตน',
-    subtitle: 'Auth_card · Auth_manual · Auth_NoSmartCard · NoSmartcard',
-    color: 'bg-orange-500',
-    ring: 'ring-orange-300',
+    subtitle: 'Auth_card · Auth_manual · Auth_NoSmartCard',
+    color: 'bg-[#b45309]',
   },
 ];
 
@@ -41,30 +38,37 @@ function FacilityMiniChart({ facility, highlight }: { facility: FacilityStats; h
 
   return (
     <div
-      className={`rounded-xl border p-4 bg-white shadow-sm ${
-        highlight ? 'border-purple-400 ring-2 ring-purple-200' : 'border-gray-200'
+      className={`border bg-white p-4 transition-colors ${
+        highlight ? 'border-[#1a7a6d] bg-[#f3faf8]' : 'border-[#d8e0e5] hover:border-[#a8b8c0]'
       }`}
     >
-      <div className="mb-3">
-        <p className="text-sm font-bold text-gray-900 leading-tight">{facility.facility_name}</p>
-        <p className="text-xs text-gray-500 mt-1">รหัส {facility.hcode}</p>
+      <div className="mb-3 pb-3 border-b border-[#eef2f4]">
+        <p
+          className="text-sm font-semibold text-[#0b3d4a] leading-snug"
+          style={{ fontFamily: 'var(--font-ibm-plex)' }}
+        >
+          {facility.facility_name}
+        </p>
+        <p className="text-xs text-[#5c6b73] mt-1 tracking-wide">รหัส {facility.hcode}</p>
       </div>
 
-      <div className="flex items-end justify-center gap-3 h-36 border-b border-gray-100 pb-2">
+      <div className="flex items-end justify-center gap-3 h-36 pb-1">
         {BAR_CONFIG.map((bar) => {
           const value = facility[bar.key];
           const height = `${Math.max((value / maxValue) * 100, value > 0 ? 8 : 0)}%`;
           return (
             <div key={bar.key} className="flex flex-col items-center h-full min-w-[44px] flex-1">
               <div className="flex-1 w-full flex flex-col justify-end items-center min-h-0">
-                <span className="text-[11px] font-bold text-gray-800 mb-1">{value.toLocaleString('th-TH')}</span>
+                <span className="text-[11px] font-semibold text-[#15202b] mb-1">
+                  {value.toLocaleString('th-TH')}
+                </span>
                 <div
-                  className={`w-full max-w-[36px] rounded-t-md ${bar.color} ring-1 ${bar.ring}`}
+                  className={`w-full max-w-[32px] ${bar.color}`}
                   style={{ height }}
                   title={`${bar.label}: ${value.toLocaleString('th-TH')}`}
                 />
               </div>
-              <p className="text-[10px] text-gray-600 mt-2 text-center leading-tight">{bar.label}</p>
+              <p className="text-[10px] text-[#5c6b73] mt-2 text-center leading-tight">{bar.label}</p>
             </div>
           );
         })}
@@ -75,8 +79,8 @@ function FacilityMiniChart({ facility, highlight }: { facility: FacilityStats; h
 
 export default function AuthVerificationFacilitiesChart({
   highlightHcode,
-  title = 'สถิติการยืนยันตัวตนแต่ละ รพสต.',
-  subtitle = 'กราฟ 3 แท่ง: ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน',
+  title = 'สถิติการยืนยันตัวตนแต่ละหน่วยบริการ',
+  subtitle = 'ทั้งหมด · ยืนยันตัวตน · ไม่ได้ยืนยันตัวตน',
 }: {
   highlightHcode?: string;
   title?: string;
@@ -137,19 +141,24 @@ export default function AuthVerificationFacilitiesChart({
   );
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border-t-4 border-purple-500 overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <div className="bg-white border border-[#d8e0e5] overflow-hidden">
+      <div className="px-5 sm:px-6 py-5 border-b border-[#d8e0e5] bg-[#fafbfc] flex flex-col xl:flex-row xl:items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-          <p className="text-sm text-gray-600 mt-1">{subtitle}</p>
+          <h2
+            className="text-lg font-semibold text-[#0b3d4a]"
+            style={{ fontFamily: 'var(--font-ibm-plex)' }}
+          >
+            {title}
+          </h2>
+          <p className="text-sm text-[#5c6b73] mt-1">{subtitle}</p>
         </div>
-        <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex flex-col gap-3 items-stretch xl:items-end">
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="ค้นหารหัส / ชื่อ รพสต."
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm min-w-[220px]"
+            placeholder="ค้นหารหัส / ชื่อหน่วยบริการ"
+            className="px-3 py-2 border border-[#d8e0e5] rounded-md text-sm min-w-[220px] bg-white focus:outline-none focus:border-[#1a7a6d] focus:ring-1 focus:ring-[#1a7a6d]"
           />
           <AuthDateRangeFilter
             dateFrom={dateFrom}
@@ -167,27 +176,34 @@ export default function AuthVerificationFacilitiesChart({
       </div>
 
       {error && (
-        <div className="mx-6 mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+        <div className="mx-5 sm:mx-6 mt-4 border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm">
+          {error}
+        </div>
       )}
 
       {loading ? (
-        <div className="py-12 text-center text-gray-500">กำลังโหลดกราฟ...</div>
+        <div className="py-16 text-center text-[#5c6b73] text-sm">กำลังโหลดข้อมูล...</div>
       ) : (
-        <div className="p-6">
-          <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="p-5 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
             {BAR_CONFIG.map((bar) => (
-              <div key={bar.key} className="rounded-lg bg-gray-50 p-3 text-center border border-gray-100">
-                <p className="text-xs font-semibold text-gray-600">{bar.label} (รวม)</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">{bar.subtitle}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">
+              <div key={bar.key} className="border border-[#d8e0e5] px-4 py-3 bg-[#fafbfc]">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`h-2 w-2 ${bar.color}`} />
+                  <p className="text-xs font-medium text-[#5c6b73]">{bar.label}</p>
+                </div>
+                <p
+                  className="text-2xl font-semibold text-[#0b3d4a] tabular-nums"
+                  style={{ fontFamily: 'var(--font-ibm-plex)' }}
+                >
                   {totals[bar.key].toLocaleString('th-TH')}
                 </p>
               </div>
             ))}
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">
-            แสดง {filteredFacilities.length.toLocaleString('th-TH')} รพสต.
+          <p className="text-sm text-[#5c6b73] mb-4">
+            แสดง {filteredFacilities.length.toLocaleString('th-TH')} หน่วยบริการ
             {' · '}
             {getDateRangeSummary(dateFrom, dateTo)}
           </p>
@@ -198,18 +214,26 @@ export default function AuthVerificationFacilitiesChart({
           />
 
           {filteredFacilities.length === 0 ? (
-            <div className="py-10 text-center text-gray-500">ไม่พบข้อมูล รพสต.</div>
+            <div className="py-12 text-center text-[#5c6b73] text-sm">ไม่พบข้อมูลหน่วยบริการ</div>
           ) : (
             <div className="mt-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">รายละเอียดแต่ละ รพสต.</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filteredFacilities.map((facility) => (
-                <FacilityMiniChart
-                  key={facility.hcode}
-                  facility={facility}
-                  highlight={!!highlightHcode && facility.hcode === highlightHcode}
-                />
-              ))}
+              <div className="flex items-center justify-between mb-4 border-b border-[#d8e0e5] pb-3">
+                <h3
+                  className="text-base font-semibold text-[#0b3d4a]"
+                  style={{ fontFamily: 'var(--font-ibm-plex)' }}
+                >
+                  รายละเอียดแต่ละหน่วย
+                </h3>
+                <p className="text-xs text-[#5c6b73]">เรียงตามจำนวนรายการ</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                {filteredFacilities.map((facility) => (
+                  <FacilityMiniChart
+                    key={facility.hcode}
+                    facility={facility}
+                    highlight={!!highlightHcode && facility.hcode === highlightHcode}
+                  />
+                ))}
               </div>
             </div>
           )}

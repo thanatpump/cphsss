@@ -42,7 +42,7 @@ export default function DownloadCardReaderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen app-shell flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
@@ -50,8 +50,8 @@ export default function DownloadCardReaderPage() {
             <p className="text-gray-600">ไฟล์ ZIP สำหรับแจกจ่ายให้ผู้ใช้งาน</p>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-6 mb-6 border border-blue-200">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">📋 ไฟล์ที่รวมใน ZIP:</h3>
+          <div className="bg-[#e8f4f2] rounded-lg p-6 mb-6 border border-[#d8e0e5]">
+            <h3 className="text-lg font-semibold text-[#0b3d4a] mb-4">📋 ไฟล์ที่รวมใน ZIP:</h3>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-center">
                 <span className="text-green-500 mr-2">✓</span>
@@ -82,7 +82,7 @@ export default function DownloadCardReaderPage() {
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-all ${
               downloading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
+                : 'bg-[#1a7a6d] hover:bg-[#0b3d4a] text-white shadow-md hover:shadow-lg'
             }`}
           >
             {downloading ? (
@@ -130,7 +130,7 @@ export default function DownloadCardReaderPage() {
           </div>
 
           <div className="mt-6 text-center">
-            <Link href="/dashboard" className="text-blue-600 hover:text-blue-800 underline">
+            <Link href="/dashboard" className="text-[#1a7a6d] hover:text-[#0b3d4a] underline">
               ← กลับไปยัง Dashboard
             </Link>
           </div>

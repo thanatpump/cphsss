@@ -63,9 +63,9 @@ export default function BudgetAllocationPage() {
 
   const getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
-      'SIGNSTMM': 'bg-blue-100 text-blue-800 border-blue-300',
+      'SIGNSTMM': 'bg-[#e8f4f2] text-[#0b3d4a] border-[#7dcdc0]',
       'SIGNSTMS': 'bg-green-100 text-green-800 border-green-300',
-      'SOGNSTMM': 'bg-purple-100 text-purple-800 border-purple-300',
+      'SOGNSTMM': 'bg-[#e8f4f2] text-[#0b3d4a] border-[#7dcdc0]',
       'SOGNSTMP': 'bg-orange-100 text-orange-800 border-orange-300',
     };
     return colors[type] || 'bg-gray-100 text-gray-800 border-gray-300';
@@ -103,7 +103,7 @@ export default function BudgetAllocationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-blue-600 mx-auto"></div>
           <p className="mt-6 text-xl text-gray-700 font-semibold">กำลังโหลดข้อมูล...</p>
@@ -113,13 +113,13 @@ export default function BudgetAllocationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pb-10">
+    <div className="min-h-screen app-shell pb-10">
       {/* Header */}
       <div className="bg-white shadow-lg border-b-4 border-blue-600 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center py-6 gap-4">
             <div>
-              <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#1a7a6d] to-[#0b3d4a]">
                 ตรวจสอบข้อมูลการจัดสรรเงิน
               </h1>
               <p className="text-gray-600 mt-2 text-lg">ระบบประกันสังคมจังหวัดชัยภูมิ</p>
@@ -137,12 +137,12 @@ export default function BudgetAllocationPage() {
         {/* Summary Cards */}
         {summary && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
+            <div className="bg-gradient-to-br from-[#1a7a6d] to-[#0b3d4a] rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100 text-sm font-semibold mb-1">งบประมาณรวม</p>
+                  <p className="text-white/80 text-sm font-semibold mb-1">งบประมาณรวม</p>
                   <p className="text-3xl font-bold">{formatNumberShort(summary.total_allocation)}</p>
-                  <p className="text-blue-100 text-xs mt-1">บาท</p>
+                  <p className="text-white/80 text-xs mt-1">บาท</p>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-full p-4">
                   <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
@@ -169,12 +169,12 @@ export default function BudgetAllocationPage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
+            <div className="bg-gradient-to-br from-[#15685d] to-[#0b3d4a] rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-transform">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-100 text-sm font-semibold mb-1">โรงพยาบาล</p>
+                  <p className="text-white/80 text-sm font-semibold mb-1">โรงพยาบาล</p>
                   <p className="text-3xl font-bold">{summary.total_hospitals}</p>
-                  <p className="text-purple-100 text-xs mt-1">แห่ง</p>
+                  <p className="text-white/80 text-xs mt-1">แห่ง</p>
                 </div>
                 <div className="bg-white bg-opacity-20 rounded-full p-4">
                   <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
@@ -224,7 +224,7 @@ export default function BudgetAllocationPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-t-4 border-blue-500">
+        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border-t-4 border-[#1a7a6d]">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
             <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
@@ -240,7 +240,7 @@ export default function BudgetAllocationPage() {
                   setSelectedType(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent transition-all"
               >
                 <option value="all">ทั้งหมด</option>
                 <option value="SIGNSTMM">ผู้ป่วยใน (SIGNSTMM)</option>
@@ -258,7 +258,7 @@ export default function BudgetAllocationPage() {
                   setSelectedPeriod(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent transition-all"
               >
                 <option value="">ทั้งหมด</option>
                 {periods.map(period => (
@@ -277,7 +277,7 @@ export default function BudgetAllocationPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="พิมพ์ชื่อหรือรหัสโรงพยาบาล..."
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a7a6d] focus:border-transparent transition-all"
               />
             </div>
           </div>
@@ -300,8 +300,8 @@ export default function BudgetAllocationPage() {
         </div>
 
         {/* Data Table */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-purple-500">
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-[#1a7a6d]">
+          <div className="bg-gradient-to-r from-[#15685d] to-[#0b3d4a] px-6 py-4">
             <h2 className="text-2xl font-bold text-white">
               รายการจัดสรรเงิน ({filteredData.length} รายการ)
             </h2>
@@ -333,7 +333,7 @@ export default function BudgetAllocationPage() {
                   </tr>
                 ) : (
                   currentData.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-purple-50 transition-colors">
+                    <tr key={item.id} className="hover:bg-[#e8f4f2] transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {startIndex + index + 1}
                       </td>
@@ -355,10 +355,10 @@ export default function BudgetAllocationPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-green-700">
                         {formatNumber(item.total_cases)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-blue-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-semibold text-[#0b3d4a]">
                         {formatNumber(item.avg_amount)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-purple-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right font-bold text-[#0b3d4a]">
                         {formatNumber(item.total_amount)}
                       </td>
                     </tr>
@@ -366,7 +366,7 @@ export default function BudgetAllocationPage() {
                 )}
               </tbody>
               {currentData.length > 0 && (
-                <tfoot className="bg-gradient-to-r from-purple-100 to-purple-200">
+                <tfoot className="bg-gradient-to-r from-[#e8f4f2] to-[#d4ebe7]">
                   <tr>
                     <td colSpan={5} className="px-6 py-4 text-right text-sm font-bold text-gray-800">
                       รวมทั้งหมด ({filteredData.length} รายการ):
@@ -374,13 +374,13 @@ export default function BudgetAllocationPage() {
                     <td className="px-6 py-4 text-right text-sm font-bold text-green-700">
                       {formatNumber(filteredData.reduce((sum, item) => sum + item.total_cases, 0))}
                     </td>
-                    <td className="px-6 py-4 text-right text-sm font-bold text-blue-700">
+                    <td className="px-6 py-4 text-right text-sm font-bold text-[#0b3d4a]">
                       {formatNumber(
                         filteredData.reduce((sum, item) => sum + item.total_amount, 0) /
                         filteredData.reduce((sum, item) => sum + item.total_cases, 0)
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right text-sm font-bold text-purple-700">
+                    <td className="px-6 py-4 text-right text-sm font-bold text-[#0b3d4a]">
                       {formatNumber(filteredData.reduce((sum, item) => sum + item.total_amount, 0))}
                     </td>
                   </tr>

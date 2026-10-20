@@ -68,7 +68,7 @@ export default function CreateAdminPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+      <div className="min-h-screen app-shell flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
           <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@ export default function CreateAdminPage() {
           <p className="text-gray-600 mb-6">กำลัง redirect ไปหน้า login...</p>
           <Link
             href="/allocation-check"
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-semibold"
+            className="bg-[#1a7a6d] text-white px-6 py-3 rounded-lg hover:bg-[#1a7a6d] transition-colors font-semibold"
           >
             ไปหน้า Login
           </Link>
@@ -89,7 +89,7 @@ export default function CreateAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center p-4">
+    <div className="min-h-screen app-shell flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-2xl p-8 border-t-4 border-red-500">
           <div className="text-center mb-8">

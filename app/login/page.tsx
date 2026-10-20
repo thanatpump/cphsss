@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
@@ -32,25 +33,38 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-lg shadow-xl p-8">
+    <div className="app-shell relative min-h-screen flex items-center justify-center p-4">
+      <div className="relative z-[1] max-w-md w-full">
+        <div className="mb-6 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-[#1a7a6d] font-semibold hover:underline">
+            ← กลับหน้าหลัก
+          </Link>
+        </div>
+        <div className="app-card p-8 shadow-sm">
           <div className="text-center mb-8">
-            <div className="w-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+            <div className="w-14 h-14 bg-[#1a7a6d] rounded-md flex items-center justify-center mx-auto mb-4">
+              <span
+                className="text-white text-sm font-semibold tracking-[0.14em]"
+                style={{ fontFamily: 'var(--font-ibm-plex)' }}
+              >
+                SSO
+              </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">เข้าสู่ระบบ</h1>
-            <p className="text-gray-600">ระบบจัดการข้อมูล SSO</p>
-            <p className="mt-2 text-sm text-blue-700">
+            <h1
+              className="text-2xl font-semibold text-[#0b3d4a] mb-2"
+              style={{ fontFamily: 'var(--font-ibm-plex)' }}
+            >
+              เข้าสู่ระบบ
+            </h1>
+            <p className="text-[#5c6b73] text-sm">ระบบจัดการข้อมูล SSO</p>
+            <p className="mt-2 text-sm text-[#1a7a6d]">
               รหัสผู้ใช้และรหัสผ่านใช้รหัสเดียวกับเว็ปประกันสังคม
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="username" className="block text-sm font-medium text-[#0b3d4a] mb-2">
                 ชื่อผู้ใช้
               </label>
               <input
@@ -58,14 +72,14 @@ export default function LoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="app-input w-full px-4 py-3"
                 placeholder="กรอกชื่อผู้ใช้"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-[#0b3d4a] mb-2">
                 รหัสผ่าน
               </label>
               <input
@@ -73,14 +87,14 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="app-input w-full px-4 py-3"
                 placeholder="กรอกรหัสผ่าน"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -88,15 +102,13 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="app-btn-primary w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
             </button>
           </form>
-
-          
         </div>
       </div>
     </div>
   );
-} 
+}

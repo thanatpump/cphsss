@@ -209,16 +209,16 @@ export default function AdminReportPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-md">
+    <div className="min-h-screen app-shell">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-teal-600 text-white flex items-center justify-center text-xl">
+            <div className="w-12 h-12 rounded-lg bg-[#1a7a6d] text-white flex items-center justify-center text-xl">
               📊
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">รายงานการให้บริการ</h1>
-              <p className="text-sm text-gray-600">
+              <h1 className="text-xl font-semibold text-white">รายงานการให้บริการ</h1>
+              <p className="text-sm text-white/65">
                 {user?.role === 'admin_server'
                   ? 'จำนวนผู้รับบริการแยกตามสถานบริการ (ทุก รพสต)'
                   : `สถานบริการ: ${user?.hospital_name || '-'}`}
@@ -227,7 +227,7 @@ export default function AdminReportPage() {
           </div>
           <Link
             href={backHref}
-            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+            className="bg-white/10 hover:bg-white/15 border border-white/15 text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors"
           >
             {backLabel}
           </Link>
@@ -316,8 +316,8 @@ function ReportViewTabs({
             className={`flex-1 rounded-lg px-5 py-4 text-left transition-all ${
               active
                 ? tab.id === 'daily'
-                  ? 'bg-teal-600 text-white shadow-md'
-                  : 'bg-indigo-600 text-white shadow-md'
+                  ? 'bg-[#1a7a6d] text-white shadow-md'
+                  : 'bg-[#1a7a6d] text-white shadow-md'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -389,7 +389,7 @@ function DailyReportPanel({
             title="จำนวนสถานบริการ"
             value={reportLoading ? '...' : report.length.toLocaleString('th-TH')}
             subtitle="แห่ง (ในวันที่เลือก)"
-            borderColor="border-blue-500"
+            borderColor="border-[#1a7a6d]"
           />
         )}
       </div>
@@ -454,7 +454,7 @@ function RangeReportPanel({
               value={rangeStart}
               max={rangeEnd || getTodayIso()}
               onChange={(e) => onRangeChange(e.target.value, rangeEnd)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] bg-white text-gray-900"
             />
           </div>
           <div>
@@ -468,7 +468,7 @@ function RangeReportPanel({
               min={rangeStart}
               max={getTodayIso()}
               onChange={(e) => onRangeChange(rangeStart, e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-gray-900"
+              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] bg-white text-gray-900"
             />
           </div>
         </div>
@@ -482,14 +482,14 @@ function RangeReportPanel({
           title="ผู้รับบริการในช่วงที่เลือก"
           value={rangeLoading ? '...' : rangeTotal.toLocaleString('th-TH')}
           subtitle="คน (นับไม่ซ้ำตามเลขบัตรประชาชน)"
-          borderColor="border-indigo-500"
+          borderColor="border-[#1a7a6d]"
         />
         {isAdmin && (
           <SummaryCard
             title="จำนวนสถานบริการ"
             value={rangeLoading ? '...' : rangeReport.length.toLocaleString('th-TH')}
             subtitle="แห่ง (ในช่วงวันที่เลือก)"
-            borderColor="border-blue-500"
+            borderColor="border-[#1a7a6d]"
           />
         )}
       </div>
@@ -531,7 +531,7 @@ function ReportTableCard({
   accentColor: 'teal' | 'indigo';
   onViewRecipients: (hospitalName: string) => void;
 }) {
-  const spinnerColor = accentColor === 'teal' ? 'border-teal-500' : 'border-indigo-500';
+  const spinnerColor = accentColor === 'teal' ? 'border-teal-500' : 'border-[#1a7a6d]';
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -560,9 +560,9 @@ function ReportTableCard({
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+    <div className="min-h-screen app-shell flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a7a6d] mx-auto mb-4" />
         <p className="text-gray-600">กำลังโหลด...</p>
       </div>
     </div>
@@ -812,7 +812,7 @@ function RecipientListModal({
                           <button
                             type="button"
                             onClick={() => openImage(r.authen, r.citizen_id)}
-                            className="text-indigo-600 hover:text-indigo-800 font-semibold underline"
+                            className="text-[#1a7a6d] hover:text-[#0b3d4a] font-semibold underline"
                           >
                             ดูรูป
                           </button>

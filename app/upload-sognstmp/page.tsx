@@ -52,7 +52,7 @@ export default function UploadSognstmp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-100 p-8">
+    <div className="min-h-screen app-shell p-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <Link 

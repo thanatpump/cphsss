@@ -171,8 +171,8 @@ function AdminUsersContent() {
 
   const getRoleBadge = (role: string) => {
     const badges: any = {
-      user: <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">User</span>,
-      admin_rps: <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold">Admin รพสต</span>,
+      user: <span className="px-3 py-1 bg-[#e8f4f2] text-[#0b3d4a] rounded-full text-sm font-semibold">User</span>,
+      admin_rps: <span className="px-3 py-1 bg-[#e8f4f2] text-[#0b3d4a] rounded-full text-sm font-semibold">Admin รพสต</span>,
       admin_server: <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">Admin เซิฟ</span>
     };
     return badges[role] || badges.user;
@@ -180,9 +180,9 @@ function AdminUsersContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 border-b-2 border-[#1a7a6d] mx-auto mb-4"></div>
           <p className="text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
@@ -190,18 +190,18 @@ function AdminUsersContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen app-shell">
       {/* Header */}
-      <header className="bg-white shadow-md">
+      <header className="bg-[#0b3d4a] border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center">
-              <Link href="/admin" className="mr-4 text-gray-600 hover:text-gray-900">
+              <Link href="/admin" className="mr-4 text-white/80 hover:text-white text-sm font-semibold">
                 ← กลับ
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">จัดการผู้ใช้</h1>
-                <p className="text-sm text-gray-600">ดู แก้ไข และจัดการผู้ใช้ทั้งหมด</p>
+                <h1 className="text-xl font-semibold text-white">จัดการผู้ใช้</h1>
+                <p className="text-sm text-white/65">ดู แก้ไข และจัดการผู้ใช้ทั้งหมด</p>
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@ function AdminUsersContent() {
             <Link
               href="/admin/users?filter=all"
               className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                filter === 'all' ? 'bg-[#1a7a6d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               ทั้งหมด
@@ -241,7 +241,7 @@ function AdminUsersContent() {
               <Link
                 href="/admin/users?filter=admin_rps"
                 className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  filter === 'admin_rps' ? 'bg-purple-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  filter === 'admin_rps' ? 'bg-[#15685d] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 Admin รพสต
@@ -315,7 +315,7 @@ function AdminUsersContent() {
                                     }
                                   }}
                                   disabled={actionLoading === `role-${u.id}`}
-                                  className="bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+                                  className="bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] disabled:opacity-50"
                                 >
                                   <option value="user">User</option>
                                   <option value="admin_rps">Admin รพสต</option>
@@ -342,7 +342,7 @@ function AdminUsersContent() {
                                 }
                               }}
                               disabled={actionLoading === `role-${u.id}`}
-                              className="bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+                              className="bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:ring-2 focus:ring-[#1a7a6d] focus:border-[#1a7a6d] disabled:opacity-50"
                             >
                               <option value="user">User</option>
                               <option value="admin_rps">Admin รพสต</option>
@@ -375,9 +375,9 @@ function AdminUsersContent() {
 export default function AdminUsersPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen app-shell flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a7a6d] mx-auto mb-4"></div>
           <p className="text-gray-600">กำลังโหลด...</p>
         </div>
       </div>
