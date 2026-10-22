@@ -1,11 +1,12 @@
 export type ChronicFileType = 'ACDCONF' | 'ACDDETAIL' | 'ACDSUM';
 
-export type ChronicPageKey = 'data' | 'overview' | 'disease' | 'type' | 'detail';
+export type ChronicPageKey = 'data' | 'overview' | 'disease' | 'type' | 'detail' | 'allocate';
 
 export interface ChronicNamedCount {
   name: string;
   count: number;
   percent: number;
+  description?: string;
 }
 
 export interface ChronicMonthRow {
@@ -51,6 +52,7 @@ export const CHRONIC_PAGES: Array<{ key: ChronicPageKey; label: string }> = [
   { key: 'disease', label: 'แยกรหัสโรค' },
   { key: 'type', label: 'แยกประเภท (Type)' },
   { key: 'detail', label: 'รายละเอียดบริการ' },
+  { key: 'allocate', label: 'เรื้อรัง-จัดสรรเงิน' },
 ];
 
 export const THAI_MONTHS_SHORT = [

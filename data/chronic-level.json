@@ -1,0 +1,94 @@
+{
+  "001": {
+    "name": "Diabetes mellitus",
+    "weight": 4.86
+  },
+  "002": {
+    "name": "Hypertension",
+    "weight": 3.42
+  },
+  "003": {
+    "name": "Chronic hepatitis and Cirrhosis of liver",
+    "weight": 3.83
+  },
+  "004": {
+    "name": "Congestive Heart failure",
+    "weight": 6.02
+  },
+  "005": {
+    "name": "Cerebrovascular accident",
+    "weight": 4.47
+  },
+  "006": {
+    "name": "Malignancy",
+    "weight": 0.74
+  },
+  "007": {
+    "name": "AIDS",
+    "weight": 7.1
+  },
+  "009": {
+    "name": "Chronic renal failure",
+    "weight": 8.74
+  },
+  "010": {
+    "name": "Parkinson is disease",
+    "weight": 0.74
+  },
+  "011": {
+    "name": "Myasthenia gravis",
+    "weight": 5.94
+  },
+  "012": {
+    "name": "Diabetes insipidus",
+    "weight": 0.87
+  },
+  "014": {
+    "name": "Dyslipidemia",
+    "weight": 0.37
+  },
+  "015": {
+    "name": "Rheumatoid arthritis",
+    "weight": 4.69
+  },
+  "016": {
+    "name": "Glaucoma",
+    "weight": 4.62
+  },
+  "017": {
+    "name": "Nephrotic syndrome",
+    "weight": 5.33
+  },
+  "018": {
+    "name": "SLE",
+    "weight": 6.39
+  },
+  "019": {
+    "name": "Aplastic anemia",
+    "weight": 5.68
+  },
+  "020": {
+    "name": "Thalassemia",
+    "weight": 0.27
+  },
+  "022": {
+    "name": "Psoriasis",
+    "weight": 3.34
+  },
+  "023": {
+    "name": "Malignancy",
+    "weight": 0.74
+  },
+  "024": {
+    "name": "ITP",
+    "weight": 3.74
+  },
+  "025": {
+    "name": "Thyrotoxicosis",
+    "weight": 2.02
+  },
+  "026": {
+    "name": "Schizophrenia / Delusional disorders",
+    "weight": 2.02
+  }
+}

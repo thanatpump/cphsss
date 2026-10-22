@@ -1,3 +1,4 @@
+import { ensureIcd10Codebook, icdDescription } from '@/lib/codebook';
 import { getDB } from '@/lib/database';
 import { ensureIcd10Tables } from '@/lib/icd10-import';
 import {
@@ -6,7 +7,7 @@ import {
   type Icd10ReportData,
 } from '@/lib/icd10-types';
 
-function toNamedCounts(rows: Array<{ name: string; count: number }>): Icd10NamedCount[] {
+function toNamedCounts(rows: Array<{ name: string; count: number; description?: string }>): Icd10NamedCount[] {
   const total = rows.reduce((sum, row) => sum + row.count, 0) || 1;
   return rows
     .map((row) => ({
@@ -22,6 +23,7 @@ function periodYear(period: string) {
 }
 
 export async function fetchIcd10Report(year?: number): Promise<Icd10ReportData> {
+  await ensureIcd10Codebook();
   await ensureIcd10Tables();
   const db = await getDB();
   try {
@@ -126,10 +128,14 @@ export async function fetchIcd10Report(year?: number): Promise<Icd10ReportData> 
         params
       );
       return toNamedCounts(
-        (rows || []).map((row: any) => ({
-          name: String(row.name || ''),
-          count: Number(row.count || 0),
-        }))
+        (rows || []).map((row: any) => {
+          const code = String(row.name || '');
+          return {
+            name: code,
+            count: Number(row.count || 0),
+            description: icdDescription(code),
+          };
+        })
       );
     }
 

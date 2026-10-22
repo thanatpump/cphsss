@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ReportModuleShell from '@/app/components/ReportModuleShell';
+import AllocationBoard from '@/app/components/AllocationBoard';
 import ChronicDataUploadPanel from '@/app/components/ChronicDataUploadPanel';
 import SsopEChart from '@/app/components/SsopEChart';
 import {
@@ -59,6 +60,8 @@ export default function ChronicReportPage() {
   }, [loadDb]);
 
   const hasDashboard = Boolean(data && data.kpis.cases > 0);
+  const auditYear = typeof year === 'number' ? year : new Date().getFullYear();
+  const yearOptions = data?.years?.length ? data.years : [auditYear, auditYear - 1, auditYear - 2];
 
   const handleImported = useCallback(() => {
     void loadDb().then(() => {
@@ -167,7 +170,25 @@ export default function ChronicReportPage() {
     >
       {page === 'data' && <ChronicDataUploadPanel onImported={handleImported} />}
 
-      {(page !== 'data' || hasDashboard) && (
+      {page === 'allocate' && (
+        <AllocationBoard
+          title="โรคเรื้อรัง จัดสรรเงิน"
+          description="เฉพาะ 10702 และ 10970–10983 ตัดรายการที่จำนวนครั้งเป็น 0 ผลรวมคือจำนวนครั้งคูณหน่วยน้ำหนักจากไฟล์ Excel"
+          endpoint="/api/chronic-report/audit"
+          query={{}}
+          year={auditYear}
+          years={yearOptions}
+          onYearChange={(next) => {
+            setYear(next);
+            loadDb(next);
+          }}
+          amountLabel="ผลรวมหน่วยน้ำหนัก"
+          digits={2}
+          variant="simple"
+        />
+      )}
+
+      {(page !== 'data' || hasDashboard) && page !== 'allocate' && (
         <>
           <ReportPageHeader
             id="chronic-dashboard"
@@ -254,6 +275,7 @@ function CountTable({ title, rows }: { title: string; rows: ChronicNamedCount[] 
           <tr>
             <th>#</th>
             <th>รายการ</th>
+            <th>คำอธิบาย / หน่วยน้ำหนัก</th>
             <th className="text-right">จำนวน</th>
             <th className="text-right">ร้อยละ</th>
           </tr>
@@ -263,6 +285,7 @@ function CountTable({ title, rows }: { title: string; rows: ChronicNamedCount[] 
             <tr key={row.name}>
               <td>{idx + 1}</td>
               <td className="font-medium">{row.name}</td>
+              <td>{row.description || '-'}</td>
               <td className="text-right tabular-nums">{formatInt(row.count)}</td>
               <td className="text-right tabular-nums">{row.percent.toFixed(1)}</td>
             </tr>

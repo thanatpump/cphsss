@@ -1,4 +1,4 @@
-export type ReportModuleKey = 'authen' | 'ssop' | 'icd10' | 'aipn' | 'chronic' | 'eclaim';
+export type ReportModuleKey = 'authen' | 'ssop' | 'icd10' | 'aipn' | 'chronic' | 'eclaim' | 'vaccine' | 'pp';
 
 export interface ReportModule {
   key: ReportModuleKey;
@@ -43,6 +43,20 @@ export const REPORT_MODULES: ReportModule[] = [
     label: 'E-claim',
     shortLabel: 'E-claim',
     description: 'STM / พึงรับ-พึงจ่าย จากโฟลเดอร์งวด เช่น 202609',
+  },
+  {
+    key: 'vaccine',
+    href: '/vaccine-report',
+    label: 'วัคซีน',
+    shortLabel: 'วัคซีน',
+    description: 'รายการวัคซีนจาก SSOP ที่รหัสอยู่ในกลุ่ม Z23-Z25 และ U11',
+  },
+  {
+    key: 'pp',
+    href: '/pp-report',
+    label: 'ตรวจสุขภาพ',
+    shortLabel: 'PP',
+    description: 'ตรวจสุขภาพ ใบรับรองแพทย์ และตรวจโรงงาน จากรหัส Z00 Z02 Z10',
   },
   {
     key: 'authen',

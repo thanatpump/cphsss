@@ -6,6 +6,7 @@ export interface Icd10NamedCount {
   name: string;
   count: number;
   percent: number;
+  description?: string;
 }
 
 export interface Icd10MonthRow {

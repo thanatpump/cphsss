@@ -1,6 +1,17 @@
 export type AipnFileType = 'SIGNSTMM' | 'SIGNSTMS' | 'SIGNSUMM' | 'SIGNSUMS' | 'SIGNSUPM' | 'SIGNSUPS';
 
-export type AipnPageKey = 'data' | 'overview' | 'stmm' | 'stms' | 'watch';
+export type AipnPageKey =
+  | 'data'
+  | 'overview'
+  | 'stmm'
+  | 'stms'
+  | 'watch'
+  | 'cases'
+  | 'allocate'
+  | 'reject'
+  | 'rw-cases'
+  | 'rw-allocate'
+  | 'rw-reject';
 
 export interface AipnNamedCount {
   name: string;
@@ -87,6 +98,12 @@ export const AIPN_PAGES: Array<{ key: AipnPageKey; label: string }> = [
   { key: 'stmm', label: 'SIGNSTMM (IPD)' },
   { key: 'stms', label: 'SIGNSTMS' },
   { key: 'watch', label: 'AIPN-เฝ้าระวังข้อมูลที่ไม่ผ่าน' },
+  { key: 'cases', label: 'AIPN-แยกรายตัว' },
+  { key: 'allocate', label: 'AIPN-จัดสรรเงิน' },
+  { key: 'reject', label: 'AIPN-ถูกปฏิเสธจ่าย' },
+  { key: 'rw-cases', label: 'AIPN-RW≥2 รายตัว' },
+  { key: 'rw-allocate', label: 'AIPN-จัดสรร RW≥2' },
+  { key: 'rw-reject', label: 'AIPN-ปฏิเสธ RW≥2' },
 ];
 
 export const THAI_MONTHS_SHORT = [

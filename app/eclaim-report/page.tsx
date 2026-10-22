@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ReportModuleShell from '@/app/components/ReportModuleShell';
+import AllocationBoard from '@/app/components/AllocationBoard';
 import EclaimDataUploadPanel from '@/app/components/EclaimDataUploadPanel';
 import SsopEChart from '@/app/components/SsopEChart';
 import {
@@ -63,6 +64,9 @@ export default function EclaimReportPage() {
   }, [loadDb]);
 
   const hasDashboard = Boolean(data && (data.kpis.claims > 0 || data.kpis.payTotal > 0));
+  const auditMode = page === 'category' || page === 'allocate' || page === 'reject' ? page : null;
+  const auditYear = typeof year === 'number' ? year : new Date().getFullYear();
+  const yearOptions = data?.years?.length ? data.years : [auditYear, auditYear - 1, auditYear - 2];
 
   const handleImported = useCallback(() => {
     void loadDb().then(() => {
@@ -133,7 +137,32 @@ export default function EclaimReportPage() {
     >
       {page === 'data' && <EclaimDataUploadPanel onImported={handleImported} />}
 
-      {(page !== 'data' || hasDashboard) && (
+      {auditMode && (
+        <AllocationBoard
+          title={
+            auditMode === 'category'
+              ? 'E-claim หมวดจ่าย'
+              : auditMode === 'allocate'
+                ? 'E-claim จัดสรรเงิน'
+                : 'E-claim จ่าย 0 บาท'
+          }
+          description="เฉพาะ รพ.ชัยภูมิ 10702 และ 10970–10983 จัดสรรคือยอดพึงรับมากกว่า 0 บาท ถูกปฏิเสธคือยอดเป็น 0 หมวดใช้ค่า HTYPE ใน STM"
+          endpoint="/api/eclaim-report/audit"
+          query={{ mode: auditMode }}
+          year={auditYear}
+          years={yearOptions}
+          onYearChange={(next) => {
+            setYear(next);
+            loadDb(next);
+          }}
+          amountLabel="ยอดพึงรับ"
+          variant="simple"
+          primaryTitle={auditMode === 'category' ? 'หมวดจ่าย (HTYPE)' : 'โรงพยาบาล'}
+          hideEmptyGroup={auditMode === 'category'}
+        />
+      )}
+
+      {(page !== 'data' || hasDashboard) && !auditMode && (
         <>
           <ReportPageHeader
             id="eclaim-dashboard"

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ReportModuleShell from '@/app/components/ReportModuleShell';
+import AllocationBoard from '@/app/components/AllocationBoard';
 import AipnDataUploadPanel from '@/app/components/AipnDataUploadPanel';
 import SsopEChart from '@/app/components/SsopEChart';
 import {
@@ -64,6 +65,18 @@ export default function AipnReportPage() {
   }, [loadDb]);
 
   const hasDashboard = Boolean(data && data.kpis.cases > 0);
+  const audit =
+    page === 'cases' || page === 'allocate' || page === 'reject'
+      ? { mode: page, minRw: '' }
+      : page === 'rw-cases'
+        ? { mode: 'cases', minRw: '2' }
+        : page === 'rw-allocate'
+          ? { mode: 'allocate', minRw: '2' }
+          : page === 'rw-reject'
+            ? { mode: 'reject', minRw: '2' }
+            : null;
+  const auditYear = typeof year === 'number' ? year : new Date().getFullYear();
+  const yearOptions = data?.years?.length ? data.years : [auditYear, auditYear - 1, auditYear - 2];
 
   const handleImported = useCallback(() => {
     void loadDb().then(() => {
@@ -161,7 +174,37 @@ export default function AipnReportPage() {
     >
       {page === 'data' && <AipnDataUploadPanel onImported={handleImported} />}
 
-      {(page !== 'data' || hasDashboard) && (
+      {audit && (
+        <AllocationBoard
+          title={
+            page === 'rw-cases'
+              ? 'AIPN RW ≥ 2 แยกรายตัว'
+              : page === 'rw-allocate'
+                ? 'AIPN จัดสรรเงิน RW ≥ 2'
+                : page === 'rw-reject'
+                  ? 'AIPN ถูกปฏิเสธจ่าย RW ≥ 2'
+                  : page === 'allocate'
+                    ? 'AIPN จัดสรรเงิน'
+                    : page === 'reject'
+                      ? 'AIPN ถูกปฏิเสธจ่าย'
+                      : 'AIPN แยกรายตัว'
+          }
+          description="กราฟเรียงตามผลรวม AdjRW จากมากไปน้อย จัดสรรตัดรายการ ft = N ออก ส่วนถูกปฏิเสธคือรายการ ft = N คำอธิบายรหัสมาจาก ICD-10-TM2016"
+          endpoint="/api/aipn-report/audit"
+          query={audit.minRw ? { mode: audit.mode, minRw: audit.minRw } : { mode: audit.mode }}
+          year={auditYear}
+          years={yearOptions}
+          onYearChange={(next) => {
+            setYear(next);
+            loadDb(next);
+          }}
+          amountLabel="ผลรวม AdjRW"
+          digits={4}
+          variant="simple"
+        />
+      )}
+
+      {(page !== 'data' || hasDashboard) && !audit && (
         <>
           {error && <ReportAlert>{error}</ReportAlert>}
           {loading ? (

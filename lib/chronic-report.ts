@@ -1,3 +1,4 @@
+import { chronicLevel } from '@/lib/codebook';
 import { getDB } from '@/lib/database';
 import { ensureChronicTables } from '@/lib/chronic-import';
 import { hospitalLabel, loadHospitalDirectory } from '@/lib/hospital-names';
@@ -7,7 +8,7 @@ import {
   type ChronicReportData,
 } from '@/lib/chronic-types';
 
-function toNamedCounts(rows: Array<{ name: string; count: number }>): ChronicNamedCount[] {
+function toNamedCounts(rows: Array<{ name: string; count: number; description?: string }>): ChronicNamedCount[] {
   const total = rows.reduce((sum, row) => sum + row.count, 0) || 1;
   return rows
     .map((row) => ({
@@ -158,10 +159,15 @@ export async function fetchChronicReport(year?: number): Promise<ChronicReportDa
         }))
       ),
       byDisease: toNamedCounts(
-        (diseaseRows || []).map((row: any) => ({
-          name: String(row.name || ''),
-          count: Number(row.count || 0),
-        }))
+        (diseaseRows || []).map((row: any) => {
+          const code = String(row.name || '');
+          const level = chronicLevel(code);
+          return {
+            name: code,
+            count: Number(row.count || 0),
+            description: level ? `${level.name} (น้ำหนัก ${level.weight})` : '',
+          };
+        })
       ),
       byConfirm: toNamedCounts(
         (confirmRows || []).map((row: any) => ({

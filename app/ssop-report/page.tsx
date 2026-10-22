@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as XLSX from 'xlsx';
+import AllocationBoard from '@/app/components/AllocationBoard';
 import SsopEChart from '@/app/components/SsopEChart';
 import SsopDataUploadPanel from '@/app/components/SsopDataUploadPanel';
 import ReportModuleShell from '@/app/components/ReportModuleShell';
@@ -165,6 +166,9 @@ export default function SsopReportPage() {
   const topDistricts = districtsByCount.slice(0, 10);
   const bottomDistricts = [...districtsByCount].reverse().slice(0, 10);
   const hasDashboard = Boolean(data && data.kpis.patients > 0);
+  const auditMode = page === 'cases' || page === 'allocate' || page === 'reject' ? page : null;
+  const auditYear = typeof year === 'number' ? year : new Date().getFullYear();
+  const yearOptions = data?.years?.length ? data.years : [auditYear, auditYear - 1, auditYear - 2];
   const showReportChrome = page !== 'data' || hasDashboard;
 
   const handleImported = useCallback(() => {
@@ -195,7 +199,36 @@ export default function SsopReportPage() {
     >
       {page === 'data' && <SsopDataUploadPanel onImported={handleImported} />}
 
-      {(page !== 'data' || hasDashboard) && (
+      {auditMode && (
+        <AllocationBoard
+          title={
+            auditMode === 'cases'
+              ? 'SSOP แยกรายตัว'
+              : auditMode === 'allocate'
+                ? 'SSOP จัดสรรเงิน'
+                : 'SSOP ถูกปฏิเสธจ่าย'
+          }
+          description={
+            auditMode === 'cases'
+              ? 'รหัสโรคหลักและรหัสรองทั้งหมด คำอธิบายจาก ICD-10-TM2016 จำนวนที่ซ้ำในวันและในเดือน สถานะ Authen และ Statement'
+              : auditMode === 'allocate'
+                ? 'เฉพาะหน่วยในจังหวัดชัยภูมิตามชุดรหัสในสไลด์ และไม่มีเหตุผลที่ถูกตัดจ่าย'
+                : 'หน่วยชุดเดียวกับจัดสรรเงิน แต่เป็นรายการที่เข้าเหตุผลตัดจ่ายอย่างน้อย 1 ข้อ'
+          }
+          endpoint="/api/ssop-report/audit"
+          query={{ mode: auditMode }}
+          year={auditYear}
+          years={yearOptions}
+          onYearChange={(next) => {
+            setYear(next);
+            loadDb(next);
+          }}
+          amountLabel="จำนวนเงิน"
+          variant="ssop"
+        />
+      )}
+
+      {(page !== 'data' || hasDashboard) && !auditMode && (
         <>
           <ReportPageHeader
             id="ssop-dashboard"

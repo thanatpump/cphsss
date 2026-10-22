@@ -3,7 +3,10 @@ export type SsopPageKey =
   | 'overview'
   | 'district'
   | 'facility-month'
-  | 'facility';
+  | 'facility'
+  | 'cases'
+  | 'allocate'
+  | 'reject';
 
 export interface NamedCount {
   name: string;
@@ -69,6 +72,9 @@ export const SSOP_PAGES: Array<{ key: SsopPageKey; label: string }> = [
   { key: 'district', label: 'SSOP-สรุปแยกอำเภอ' },
   { key: 'facility-month', label: 'SSOP-สรุปแยกหน่วยรายเดือน' },
   { key: 'facility', label: 'SSOP-สรุปแยกหน่วย' },
+  { key: 'cases', label: 'SSOP-แยกรายตัว' },
+  { key: 'allocate', label: 'SSOP-จัดสรรเงิน' },
+  { key: 'reject', label: 'SSOP-ถูกปฏิเสธจ่าย' },
 ];
 
 export const THAI_MONTHS = [

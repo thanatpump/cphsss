@@ -1,6 +1,6 @@
 export type EclaimFileType = 'STM' | 'PAY' | 'IMG' | 'UNKNOWN';
 
-export type EclaimPageKey = 'data' | 'overview' | 'stm' | 'pay' | 'summary';
+export type EclaimPageKey = 'data' | 'overview' | 'stm' | 'pay' | 'summary' | 'category' | 'allocate' | 'reject';
 
 export interface EclaimNamedCount {
   name: string;
@@ -60,6 +60,9 @@ export const ECLAIM_PAGES: Array<{ key: EclaimPageKey; label: string }> = [
   { key: 'stm', label: 'รายการขอเบิก (STM)' },
   { key: 'pay', label: 'พึงรับ-พึงจ่าย' },
   { key: 'summary', label: 'สรุปราย REP' },
+  { key: 'category', label: 'E-claim-หมวดจ่าย' },
+  { key: 'allocate', label: 'E-claim-จัดสรรเงิน' },
+  { key: 'reject', label: 'E-claim-จ่าย 0 บาท' },
 ];
 
 export const THAI_MONTHS_SHORT = [

@@ -117,26 +117,35 @@ export default function Icd10ReportPage() {
     [data]
   );
 
-  const topBar = useMemo(
-    () => ({
-      tooltip: { trigger: 'axis' },
-      grid: { left: 72, right: 24, top: 16, bottom: 32 },
+  const topBar = useMemo(() => {
+    const rows = [...(data?.topCodes || [])].reverse();
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: (params: Array<{ dataIndex: number; value: number }>) => {
+          const row = rows[params?.[0]?.dataIndex ?? -1];
+          if (!row) return '';
+          const disease = row.description || row.name;
+          return `${disease}<br/>${row.name}<br/>${row.count.toLocaleString('th-TH')} ครั้ง`;
+        },
+      },
+      grid: { left: 16, right: 24, top: 8, bottom: 8, containLabel: true },
       xAxis: { type: 'value', splitLine: { lineStyle: { color: '#eef2f4' } } },
       yAxis: {
         type: 'category',
-        data: [...(data?.topCodes || [])].reverse().map((row) => row.name),
-        axisLabel: { fontSize: 11, color: '#3d4f5a' },
+        data: rows.map((row) => row.description || row.name),
+        axisLabel: { width: 280, overflow: 'truncate', fontSize: 11, color: '#3d4f5a' },
       },
       series: [
         {
           type: 'bar',
-          data: [...(data?.topCodes || [])].reverse().map((row) => row.count),
+          data: rows.map((row) => row.count),
           itemStyle: { color: '#1a7a6d', borderRadius: [0, 3, 3, 0] },
         },
       ],
-    }),
-    [data]
-  );
+    };
+  }, [data]);
 
   return (
     <ReportModuleShell
@@ -195,8 +204,8 @@ export default function Icd10ReportPage() {
                       <SsopEChart option={monthOption} height={320} />
                     </ReportPanel>
                   </div>
-                  <ReportPanel title="รหัสโรคที่พบบ่อย (Top 25)">
-                    <SsopEChart option={topBar} height={480} />
+                  <ReportPanel title="โรคที่พบบ่อย (Top 25)" description="ชื่อโรคจาก ICD-10-TM ชี้ที่แท่งเพื่อดูรหัส">
+                    <SsopEChart option={topBar} height={640} />
                   </ReportPanel>
                 </>
               )}
@@ -230,6 +239,7 @@ function CodeTable({ title, rows }: { title: string; rows: Icd10NamedCount[] }) 
           <tr>
             <th>#</th>
             <th>ICD-10</th>
+            <th>คำอธิบาย ICD-10-TM</th>
             <th className="text-right">จำนวน</th>
             <th className="text-right">ร้อยละ</th>
           </tr>
@@ -239,6 +249,7 @@ function CodeTable({ title, rows }: { title: string; rows: Icd10NamedCount[] }) 
             <tr key={row.name}>
               <td>{idx + 1}</td>
               <td className="font-medium">{row.name}</td>
+              <td>{row.description || '-'}</td>
               <td className="text-right tabular-nums">{formatInt(row.count)}</td>
               <td className="text-right tabular-nums">{row.percent.toFixed(1)}</td>
             </tr>
