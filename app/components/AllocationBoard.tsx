@@ -323,7 +323,22 @@ export default function AllocationBoard({
                     <td>{row.visitAt || '-'}</td>
                     <td>{row.primaryCode || '-'}</td>
                     <td>{row.primaryDesc || '-'}</td>
-                    <td className="max-w-xs whitespace-normal">{row.secondary || '-'}</td>
+                    <td className="max-w-sm whitespace-normal align-top">
+                      {row.secondary ? (
+                        <div className="-my-1">
+                          {row.secondary.split(' | ').map((item, index) => (
+                            <div
+                              key={`${row.id}-${index}`}
+                              className={index > 0 ? 'mt-1.5 border-t border-[#c5d4da] pt-1.5' : ''}
+                            >
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        '-'
+                      )}
+                    </td>
                     {variant === 'ssop' && (
                       <>
                         <td>{row.late}</td>
